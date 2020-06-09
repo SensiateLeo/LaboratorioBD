@@ -8,6 +8,40 @@ def verifica_Tipo(cursor,login):
     row = cursor.fetchone()
     return row[0]
 
+#============RELATÓRIOS================================
+
+def relatorio_historicoPessoal(cursor):
+    cursor.execute("select * from Relatorio_1 limit 20")
+    row = cursor.fetchall()
+    return row
+
+def relatorio_historicoHospitais(cursor):
+    cursor.execute("select * from Relatorio_2 limit 20")
+    row = cursor.fetchall()
+    return row
+
+def relatorio_historicoAtendimentos(cursor):
+    cursor.execute("select * from Relatorio_3 limit 20")
+    row = cursor.fetchall()
+    return row
+
+def relatorio_historicoAmostras(cursor):
+    cursor.execute("select * from Relatorio_4 limit 20")
+    row = cursor.fetchall()
+    return row
+
+def relatorio_historicoLaboratorios(cursor):
+    cursor.execute("select * from Relatorio_5 limit 20")
+    row = cursor.fetchall()
+    return row
+
+def relatorio_historicoPesquisadores(cursor):
+    cursor.execute("select * from Relatorio_6 limit 20")
+    row = cursor.fetchall()
+    return row
+
+#============OVERVIEW================================
+
 def overview_casosPositivos(cursor):
     cursor.execute("select * from casosPositivos")
     row = cursor.fetchone()
