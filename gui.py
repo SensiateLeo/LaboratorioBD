@@ -163,31 +163,168 @@ class Dashboard:
         self.relatorios.pack()
 
         btn1 = Button(master=self.frame1,
-                      text="Histórico Pessoal", height=1, width=40).pack(padx=20, pady=5)
-
+                      text="Histórico Pessoal", height=1, width=40, command=lambda:
+            self.frameHistoricoPessoal()).pack(padx=20, pady=5)
 
         if(tipo=='Medicina' or tipo == 'Admin'):
 
-            btn2 = Button(master=self.frame1, text="Histórico dos Hospitais", height=1, width=40).pack(padx=20, pady=5)
+            btn2 = Button(master=self.frame1, text="Histórico dos Hospitais", height=1, width=40, command=lambda:
+            self.frameHistoricoHospital()).pack(padx=20, pady=5)
 
             btn3 = Button(master=self.frame1,
-                          text="Histórico dos Atendimentos dos Hospitais", height=1, width=40).pack(padx=20, pady=5)
+                          text="Histórico dos Atendimentos dos Hospitais", height=1, width=40, command=lambda:
+            self.frameHistoricoAtendimentos()).pack(padx=20, pady=5)
 
-        elif(tipo=='Pesquisa' or tipo == 'Admin'):
+        if(tipo=='Pesquisa' or tipo == 'Admin'):
             btn4 = Button(master=self.frame1,
-                          text="Histórico de Amostras", height=1, width=40).pack(padx=20, pady=5)
+                          text="Histórico de Amostras", height=1, width=40, command=lambda:
+            self.frameHistoricoAmostras()).pack(padx=20, pady=5)
 
             btn5 = Button(master=self.frame1,
-                          text="Histórico de Laboratórios", height=1, width=40).pack(padx=20, pady=5)
+                          text="Histórico de Laboratórios", height=1, width=40, command=lambda:
+            self.frameHistoricoLaboratorios()).pack(padx=20, pady=5)
 
             btn6 = Button(master=self.frame1,
-                          text="Histórico de Pesquisadores", height=1, width=40).pack(padx=20, pady=5)
+                          text="Histórico de Pesquisadores", height=1, width=40, command=lambda:
+            self.frameHistoricoPesquisadores()).pack(padx=20, pady=5)
 
         btn7 = Button(self.frame1,
                       text="Retornar a Tela Inicial", height=1, width=40, command=lambda:
             [self.frame1.pack_forget(), self.frameTelaInicial(tipo).pack()]).pack(padx=20, pady=30)
 
         return self.frame1
+
+    def frameHistoricoPessoal(self):
+
+        self.root = Tk()
+        self.root.title("Histórico Pessoal do Paciente")
+
+        self.lst = [("Nome", "Idade", "Sexo", "Data de Nascimento", "Contato", "Endereço", "Hospital")]
+        self.list = database.relatorio_historicoPessoal(cursor)
+        for row in self.list:
+            self.lst.append(row)
+
+        total_rows = len(self.lst)
+        total_columns = len(self.lst[0])
+
+        for i in range(total_rows):
+            for j in range(total_columns):
+                self.e = Entry(self.root, width=20, fg='black',font=('Arial', 8),justify=CENTER)
+
+                self.e.grid(row=i, column=j)
+                self.e.insert(END, self.lst[i][j])
+
+        self.root.mainloop()
+
+    def frameHistoricoHospital(self):
+
+        self.root = Tk()
+        self.root.title("Histórico dos Hospitais")
+
+        self.lst = [("Nome", "Endereço", "Funcionários", "Leitos", "Atendimentos Registrados", "Pacientes Atendidos")]
+        self.list = database.relatorio_historicoHospitais(cursor)
+        for row in self.list:
+            self.lst.append(row)
+
+        total_rows = len(self.lst)
+        total_columns = len(self.lst[0])
+
+        for i in range(total_rows):
+            for j in range(total_columns):
+                self.e = Entry(self.root, width=20, fg='black',font=('Arial', 8),justify=CENTER)
+
+                self.e.grid(row=i, column=j)
+                self.e.insert(END, self.lst[i][j])
+
+        self.root.mainloop()
+
+    def frameHistoricoAtendimentos(self):
+
+        self.root = Tk()
+        self.root.title("Histórico de Atendimentos dos Municípios")
+
+        self.lst = [("Cidade", "Atendimentos Realizados", "Pacientes Atendidos")]
+        self.list = database.relatorio_historicoAtendimentos(cursor)
+        for row in self.list:
+            self.lst.append(row)
+
+        total_rows = len(self.lst)
+        total_columns = len(self.lst[0])
+
+        for i in range(total_rows):
+            for j in range(total_columns):
+                self.e = Entry(self.root, width=20, fg='black', font=('Arial', 8), justify=CENTER)
+
+                self.e.grid(row=i, column=j)
+                self.e.insert(END, self.lst[i][j])
+
+        self.root.mainloop()
+
+    def frameHistoricoAmostras(self):
+
+        self.root = Tk()
+        self.root.title("Histórico de Amostras")
+
+        self.lst = [("Nome Paciente", "Idade", "Sexo", "Endereço", "Data da Amostra", "Resultado", "Laboratório")]
+        self.list = database.relatorio_historicoAmostras(cursor)
+        for row in self.list:
+            self.lst.append(row)
+
+        total_rows = len(self.lst)
+        total_columns = len(self.lst[0])
+
+        for i in range(total_rows):
+            for j in range(total_columns):
+                self.e = Entry(self.root, width=20, fg='black', font=('Arial', 8), justify=CENTER)
+
+                self.e.grid(row=i, column=j)
+                self.e.insert(END, self.lst[i][j])
+
+        self.root.mainloop()
+
+    def frameHistoricoLaboratorios(self):
+
+        self.root = Tk()
+        self.root.title("Histórico de Laboratórios")
+
+        self.lst = [("Nome", "Quantidade Pesquisadores", "Endereço", "Amostras Recebidas")]
+        self.list = database.relatorio_historicoLaboratorios(cursor)
+        for row in self.list:
+            self.lst.append(row)
+
+        total_rows = len(self.lst)
+        total_columns = len(self.lst[0])
+
+        for i in range(total_rows):
+            for j in range(total_columns):
+                self.e = Entry(self.root, width=20, fg='black', font=('Arial', 8), justify=CENTER)
+
+                self.e.grid(row=i, column=j)
+                self.e.insert(END, self.lst[i][j])
+
+        self.root.mainloop()
+
+    def frameHistoricoPesquisadores(self):
+
+        self.root = Tk()
+        self.root.title("Histórico de Pesquisadores")
+
+        self.lst = [("Nome", "Registro Institucional", "Data de Contratação", "ID da Amostra", "Data da Amostra", "Resultado Amostra")]
+        self.list = database.relatorio_historicoPesquisadores(cursor)
+        for row in self.list:
+            self.lst.append(row)
+
+        total_rows = len(self.lst)
+        total_columns = len(self.lst[0])
+
+        for i in range(total_rows):
+            for j in range(total_columns):
+                self.e = Entry(self.root, width=20, fg='black', font=('Arial', 8), justify=CENTER)
+
+                self.e.grid(row=i, column=j)
+                self.e.insert(END, self.lst[i][j])
+
+        self.root.mainloop()
 
     #Tela de Overview
     def frameOverviewTelaInicial(self ,tipo):
