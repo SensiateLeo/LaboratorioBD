@@ -10,7 +10,7 @@ from datetime import datetime
 try:
 
     connection = psycopg2.connect(user = "postgres",
-                                  password = "teste123",
+                                  password = "bilicu",
                                   host = "localhost",
                                   port = "5432",
                                   database = "COVID")
@@ -253,43 +253,9 @@ class Dashboard:
         self.relatorios["font"] = ("Arial", "10")
         self.relatorios.pack()
 
-        if (tipo == 'Admin'):
-            self.prontuarios = Label(self.frame1, text="Prontuarios")
-            self.prontuarios["pady"] = 20
-            self.prontuarios["font"] = ("Arial", "10")
-            self.prontuarios.pack()
 
-            btn1 = Button(master=self.frame1,
-                          text="Criação de Prontuário", height=1, width=40).pack(padx=20, pady=5)
 
-            btn2 = Button(master=self.frame1, text="Alteração de Prontuario", height=1, width=40).pack(padx=20, pady=5)
-
-            self.atendimentos = Label(self.frame1, text="Atendimentos")
-            self.atendimentos["pady"] = 20
-            self.atendimentos["font"] = ("Arial", "10")
-            self.atendimentos.pack()
-
-            btn3 = Button(master=self.frame1,
-                          text="Criação de Atendimento", height=1, width=40).pack(padx=20, pady=5)
-
-            btn4 = Button(master=self.frame1,
-                          text="Alteração de Atendimento", height=1, width=40).pack(padx=20, pady=5)
-
-            self.amostra = Label(self.frame1, text="Amostras")
-            self.amostra["pady"] = 20
-            self.amostra["font"] = ("Arial", "10")
-            self.amostra.pack()
-
-            btn5 = Button(master=self.frame1,
-                          text="Criação de Amostra", height=1, width=40).pack(padx=20, pady=5)
-
-            btn6 = Button(master=self.frame1,
-                          text="Alteração de Amostra", height=1, width=40).pack(padx=20, pady=5)
-            btn7 = Button(self.frame1,
-                          text="Retornar a Tela Inicial", height=1, width=40, command=lambda:
-                [self.frame1.pack_forget(), self.frameTelaInicial(tipo).pack()]).pack(padx=20, pady=30)
-
-        elif (tipo == 'Medicina'):
+        if (tipo == 'Medicina' or tipo =='Admin'):
             self.prontuarios = Label(self.frame1, text="Prontuarios")
             self.prontuarios["pady"] = 20
             self.prontuarios["font"] = ("Arial", "10")
@@ -312,7 +278,7 @@ class Dashboard:
             btn4 = Button(master=self.frame1,
                           text="Alteração de Atendimento", height=1, width=40).pack(padx=20, pady=5)
 
-        elif (tipo == 'Pesquisa'):
+        if (tipo == 'Pesquisa' or tipo == 'Admin'):
             self.amostra = Label(self.frame1, text="Amostras")
             self.amostra["pady"] = 20
             self.amostra["font"] = ("Arial", "10")
