@@ -198,6 +198,29 @@ class Dashboard:
 
         self.root = Tk()
         self.root.title("Histórico Pessoal do Paciente")
+        self.fontePadrao = ("Arial", "10")
+
+        self.primeiroContainer = Frame(self.root)
+        self.primeiroContainer["pady"] = 20
+        self.primeiroContainer.pack()
+
+        self.segundoContainer = Frame(self.root)
+        self.segundoContainer.pack()
+
+        self.nomeLabel = Label(self.primeiroContainer, text="Nome do Paciente: ", font=self.fontePadrao)
+        self.nomeLabel.pack(side=LEFT)
+
+        self.nome = Entry(self.primeiroContainer)
+        self.nome["width"] = 40
+        self.nome["font"] = self.fontePadrao
+        self.nome.pack(side=LEFT)
+
+        self.filtrar = Button(self.primeiroContainer)
+        self.filtrar["text"] = "Filtrar"
+        self.filtrar["font"] = self.fontePadrao
+        self.filtrar["width"] = 12
+        #self.filtrar["command"] = self.aplicaFiltro
+        self.filtrar.pack()
 
         self.lst = [("Nome", "Idade", "Sexo", "Data de Nascimento", "Contato", "Endereço", "Hospital")]
         self.list = database.relatorio_historicoPessoal(cursor)
@@ -209,17 +232,41 @@ class Dashboard:
 
         for i in range(total_rows):
             for j in range(total_columns):
-                self.e = Entry(self.root, width=20, fg='black',font=('Arial', 8),justify=CENTER)
+                self.e = Entry(self.segundoContainer, width=20, fg='black',font=('Arial', 8),justify=CENTER)
 
                 self.e.grid(row=i, column=j)
                 self.e.insert(END, self.lst[i][j])
 
         self.root.mainloop()
 
+
     def frameHistoricoHospital(self):
 
         self.root = Tk()
         self.root.title("Histórico dos Hospitais")
+        self.fontePadrao = ("Arial", "10")
+
+        self.primeiroContainer = Frame(self.root)
+        self.primeiroContainer["pady"] = 20
+        self.primeiroContainer.pack()
+
+        self.segundoContainer = Frame(self.root)
+        self.segundoContainer.pack()
+
+        self.nomeLabel = Label(self.primeiroContainer, text="Nome do Hospital: ", font=self.fontePadrao)
+        self.nomeLabel.pack(side=LEFT)
+
+        self.nome = Entry(self.primeiroContainer)
+        self.nome["width"] = 40
+        self.nome["font"] = self.fontePadrao
+        self.nome.pack(side=LEFT)
+
+        self.filtrar = Button(self.primeiroContainer)
+        self.filtrar["text"] = "Filtrar"
+        self.filtrar["font"] = self.fontePadrao
+        self.filtrar["width"] = 12
+        # self.filtrar["command"] = self.aplicaFiltro
+        self.filtrar.pack()
 
         self.lst = [("Nome", "Endereço", "Funcionários", "Leitos", "Atendimentos Registrados", "Pacientes Atendidos")]
         self.list = database.relatorio_historicoHospitais(cursor)
@@ -231,7 +278,7 @@ class Dashboard:
 
         for i in range(total_rows):
             for j in range(total_columns):
-                self.e = Entry(self.root, width=20, fg='black',font=('Arial', 8),justify=CENTER)
+                self.e = Entry(self.segundoContainer, width=20, fg='black',font=('Arial', 8),justify=CENTER)
 
                 self.e.grid(row=i, column=j)
                 self.e.insert(END, self.lst[i][j])
@@ -242,6 +289,29 @@ class Dashboard:
 
         self.root = Tk()
         self.root.title("Histórico de Atendimentos dos Municípios")
+        self.fontePadrao = ("Arial", "10")
+
+        self.primeiroContainer = Frame(self.root)
+        self.primeiroContainer["pady"] = 20
+        self.primeiroContainer.pack()
+
+        self.segundoContainer = Frame(self.root)
+        self.segundoContainer.pack()
+
+        self.nomeLabel = Label(self.primeiroContainer, text="Nome da Cidade: ", font=self.fontePadrao)
+        self.nomeLabel.pack(side=LEFT)
+
+        self.nome = Entry(self.primeiroContainer)
+        self.nome["width"] = 40
+        self.nome["font"] = self.fontePadrao
+        self.nome.pack(side=LEFT)
+
+        self.filtrar = Button(self.primeiroContainer)
+        self.filtrar["text"] = "Filtrar"
+        self.filtrar["font"] = self.fontePadrao
+        self.filtrar["width"] = 12
+        # self.filtrar["command"] = self.aplicaFiltro
+        self.filtrar.pack()
 
         self.lst = [("Cidade", "Atendimentos Realizados", "Pacientes Atendidos")]
         self.list = database.relatorio_historicoAtendimentos(cursor)
@@ -253,7 +323,7 @@ class Dashboard:
 
         for i in range(total_rows):
             for j in range(total_columns):
-                self.e = Entry(self.root, width=20, fg='black', font=('Arial', 8), justify=CENTER)
+                self.e = Entry(self.segundoContainer, width=20, fg='black', font=('Arial', 8), justify=CENTER)
 
                 self.e.grid(row=i, column=j)
                 self.e.insert(END, self.lst[i][j])
@@ -264,6 +334,29 @@ class Dashboard:
 
         self.root = Tk()
         self.root.title("Histórico de Amostras")
+        self.fontePadrao = ("Arial", "10")
+
+        self.primeiroContainer = Frame(self.root)
+        self.primeiroContainer["pady"] = 20
+        self.primeiroContainer.pack()
+
+        self.segundoContainer = Frame(self.root)
+        self.segundoContainer.pack()
+
+        self.nomeLabel = Label(self.primeiroContainer, text="Data: ", font=self.fontePadrao)
+        self.nomeLabel.pack(side=LEFT)
+
+        self.nome = Entry(self.primeiroContainer)
+        self.nome["width"] = 40
+        self.nome["font"] = self.fontePadrao
+        self.nome.pack(side=LEFT)
+
+        self.filtrar = Button(self.primeiroContainer)
+        self.filtrar["text"] = "Filtrar"
+        self.filtrar["font"] = self.fontePadrao
+        self.filtrar["width"] = 12
+        # self.filtrar["command"] = self.aplicaFiltro
+        self.filtrar.pack()
 
         self.lst = [("Nome Paciente", "Idade", "Sexo", "Endereço", "Data da Amostra", "Resultado", "Laboratório")]
         self.list = database.relatorio_historicoAmostras(cursor)
@@ -275,7 +368,7 @@ class Dashboard:
 
         for i in range(total_rows):
             for j in range(total_columns):
-                self.e = Entry(self.root, width=20, fg='black', font=('Arial', 8), justify=CENTER)
+                self.e = Entry(self.segundoContainer, width=20, fg='black', font=('Arial', 8), justify=CENTER)
 
                 self.e.grid(row=i, column=j)
                 self.e.insert(END, self.lst[i][j])
@@ -286,6 +379,29 @@ class Dashboard:
 
         self.root = Tk()
         self.root.title("Histórico de Laboratórios")
+        self.fontePadrao = ("Arial", "10")
+
+        self.primeiroContainer = Frame(self.root)
+        self.primeiroContainer["pady"] = 20
+        self.primeiroContainer.pack()
+
+        self.segundoContainer = Frame(self.root)
+        self.segundoContainer.pack()
+
+        self.nomeLabel = Label(self.primeiroContainer, text="Nome do Laboratório: ", font=self.fontePadrao)
+        self.nomeLabel.pack(side=LEFT)
+
+        self.nome = Entry(self.primeiroContainer)
+        self.nome["width"] = 40
+        self.nome["font"] = self.fontePadrao
+        self.nome.pack(side=LEFT)
+
+        self.filtrar = Button(self.primeiroContainer)
+        self.filtrar["text"] = "Filtrar"
+        self.filtrar["font"] = self.fontePadrao
+        self.filtrar["width"] = 12
+        # self.filtrar["command"] = self.aplicaFiltro
+        self.filtrar.pack()
 
         self.lst = [("Nome", "Quantidade Pesquisadores", "Endereço", "Amostras Recebidas")]
         self.list = database.relatorio_historicoLaboratorios(cursor)
@@ -297,7 +413,7 @@ class Dashboard:
 
         for i in range(total_rows):
             for j in range(total_columns):
-                self.e = Entry(self.root, width=20, fg='black', font=('Arial', 8), justify=CENTER)
+                self.e = Entry(self.segundoContainer, width=20, fg='black', font=('Arial', 8), justify=CENTER)
 
                 self.e.grid(row=i, column=j)
                 self.e.insert(END, self.lst[i][j])
@@ -308,6 +424,29 @@ class Dashboard:
 
         self.root = Tk()
         self.root.title("Histórico de Pesquisadores")
+        self.fontePadrao = ("Arial", "10")
+
+        self.primeiroContainer = Frame(self.root)
+        self.primeiroContainer["pady"] = 20
+        self.primeiroContainer.pack()
+
+        self.segundoContainer = Frame(self.root)
+        self.segundoContainer.pack()
+
+        self.nomeLabel = Label(self.primeiroContainer, text="Nome do Pesquisador: ", font=self.fontePadrao)
+        self.nomeLabel.pack(side=LEFT)
+
+        self.nome = Entry(self.primeiroContainer)
+        self.nome["width"] = 40
+        self.nome["font"] = self.fontePadrao
+        self.nome.pack(side=LEFT)
+
+        self.filtrar = Button(self.primeiroContainer)
+        self.filtrar["text"] = "Filtrar"
+        self.filtrar["font"] = self.fontePadrao
+        self.filtrar["width"] = 12
+        # self.filtrar["command"] = self.aplicaFiltro
+        self.filtrar.pack()
 
         self.lst = [("Nome", "Registro Institucional", "Data de Contratação", "ID da Amostra", "Data da Amostra", "Resultado Amostra")]
         self.list = database.relatorio_historicoPesquisadores(cursor)
@@ -319,7 +458,7 @@ class Dashboard:
 
         for i in range(total_rows):
             for j in range(total_columns):
-                self.e = Entry(self.root, width=20, fg='black', font=('Arial', 8), justify=CENTER)
+                self.e = Entry(self.segundoContainer, width=20, fg='black', font=('Arial', 8), justify=CENTER)
 
                 self.e.grid(row=i, column=j)
                 self.e.insert(END, self.lst[i][j])
