@@ -72,6 +72,23 @@ def overview_CidadesMaisSuspeitos(cursor):
     row = cursor.fetchall()
     return row
 
+def getMaxID(cursor):
+    cursor.execute("select max(id_amostra) from amostra")
+    row = cursor.fetchone()
+    return row[0]
+
+def insertAmostra(cursor,user,date,resultado,idLaboratorio,idPaciente,idPesquisador):
+    idAmostra = getMaxID(cursor) + ','
+    data = "TO_DATE(" + date + ", yyyy-mm-dd)" + ','
+    res = resultado + ','
+    idLab = idLaboratorio + ','
+    idPac = idPaciente + ','
+    idPes = idPesquisador + ''
+    cursor.execute("INSERT INTO amostra" +user+ '(id_amostra,data,resultado,id_laboratorio,id_paciente,id_pesquisador) VALUES('
+                     +idAmostra+ data + res + idLab + idPac + idPes + ')')
+
+def createViewAmostra(cursor,user):
+    cursor.execute("CREATE VIEW amostra" + user + " as select * from amostra")
 '''
 
 postgreSQL_select_historico_pessoal = """
