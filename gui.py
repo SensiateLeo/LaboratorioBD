@@ -10,7 +10,7 @@ from datetime import datetime
 try:
 
     connection = psycopg2.connect(user = "postgres",
-                                  password = "bilicu",
+                                  password = "teste123",
                                   host = "localhost",
                                   port = "5432",
                                   database = "COVID")
@@ -165,29 +165,15 @@ class Dashboard:
         btn1 = Button(master=self.frame1,
                       text="Histórico Pessoal", height=1, width=40).pack(padx=20, pady=5)
 
-        if(tipo == 'Admin'):
-            btn2 = Button(master=self.frame1, text="Histórico dos Hospitais", height=1, width=40).pack(padx=20, pady=5)
 
-            btn3 = Button(master=self.frame1,
-                          text="Histórico dos Atendimentos dos Hospitais", height=1, width=40).pack(padx=20, pady=5)
-
-            btn4 = Button(master=self.frame1,
-                          text="Histórico de Amostras", height=1, width=40).pack(padx=20, pady=5)
-
-            btn5 = Button(master=self.frame1,
-                          text="Histórico de Laboratórios", height=1, width=40).pack(padx=20, pady=5)
-
-            btn6 = Button(master=self.frame1,
-                          text="Histórico de Pesquisadores", height=1, width=40).pack(padx=20, pady=5)
-
-        elif(tipo=='Medicina'):
+        if(tipo=='Medicina' or tipo == 'Admin'):
 
             btn2 = Button(master=self.frame1, text="Histórico dos Hospitais", height=1, width=40).pack(padx=20, pady=5)
 
             btn3 = Button(master=self.frame1,
                           text="Histórico dos Atendimentos dos Hospitais", height=1, width=40).pack(padx=20, pady=5)
 
-        elif(tipo=='Pesquisa'):
+        elif(tipo=='Pesquisa' or tipo == 'Admin'):
             btn4 = Button(master=self.frame1,
                           text="Histórico de Amostras", height=1, width=40).pack(padx=20, pady=5)
 
