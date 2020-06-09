@@ -48,10 +48,13 @@ postgreSQL_select_historico_pessoal = """
 	P.data_nasc,
 	concat(P.telefone_fixo,P.telefone_celular) as contato_telefonico,
 	concat(P.cidade,concat(P.estado,P.pais)) as endereco,
-	P.id_hospital
+	P.id_hospital,
+	H.nome as Hospital
 	from (select distinct(id_paciente) from amostra where resultado  = 'P') as A
 	JOIN pessoa P
 	ON A.id_paciente = P.id_pessoa
+	JOIN hospital H
+	ON P.id_hospital = H.id_hospital
     """
 
     postgreSQL_select_historico_hospitais = """
