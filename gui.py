@@ -3,18 +3,19 @@ from PIL import ImageTk, Image
 import psycopg2
 import sys
 import database
-
 import hashlib
 from datetime import datetime
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 try:
 
     connection = psycopg2.connect(user = "postgres",
-                                  password = "teste123",
+                                  password = "bilicu",
                                   host = "localhost",
                                   port = "5432",
                                   database = "COVID")
 
+    connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()
 
 except (Exception, psycopg2.Error) as error :
@@ -133,25 +134,25 @@ class Dashboard:
 
     #Tela Inicial
     #Contém as opções Relatório,Simulações e Overview
-    def frameTelaInicial(self, tipo):
+    def frameTelaInicial(self, tipo,user):
 
         self.frame1 = Frame()
         self.frame1["pady"] = 10
 
         btn1 = Button(self.frame1,
                       text="Relatorio", height=3, width=40,command=lambda:
-            [self.frame1.pack_forget(),self.frameRelatoriosTelaInicial(tipo).pack()]).pack(padx=20, pady=5)
+            [self.frame1.pack_forget(),self.frameRelatoriosTelaInicial(tipo,user).pack()]).pack(padx=20, pady=5)
         btn2 = Button(self.frame1, text="Simulações", height=3, width=40,command=lambda:
-            [self.frame1.pack_forget(),self.frameSimulacoesTelaInicial(tipo).pack()]).pack(padx=20, pady=5)
+            [self.frame1.pack_forget(),self.frameSimulacoesTelaInicial(tipo,user).pack()]).pack(padx=20, pady=5)
         btn3 = Button(self.frame1,
                       text="Overview", height=3, width=40,command=lambda:
-            [self.frame1.pack_forget(),self.frameOverviewTelaInicial(tipo).pack()]).pack(padx=20, pady=5)
+            [self.frame1.pack_forget(),self.frameOverviewTelaInicial(tipo,user).pack()]).pack(padx=20, pady=5)
 
 
         return self.frame1
 
     #Tela de Relatórios
-    def frameRelatoriosTelaInicial(self, tipo):
+    def frameRelatoriosTelaInicial(self, tipo,user):
 
         self.frame1 = Frame()
         self.frame1["pady"] = 10
@@ -190,7 +191,7 @@ class Dashboard:
 
         btn7 = Button(self.frame1,
                       text="Retornar a Tela Inicial", height=1, width=40, command=lambda:
-            [self.frame1.pack_forget(), self.frameTelaInicial(tipo).pack()]).pack(padx=20, pady=30)
+            [self.frame1.pack_forget(), self.frameTelaInicial(tipo,user).pack()]).pack(padx=20, pady=30)
 
         return self.frame1
 
@@ -466,7 +467,7 @@ class Dashboard:
         self.root.mainloop()
 
     #Tela de Overview
-    def frameOverviewTelaInicial(self ,tipo):
+    def frameOverviewTelaInicial(self ,tipo,user):
 
         self.frame1 = Frame()
         self.frame1["pady"] = 10
@@ -479,10 +480,10 @@ class Dashboard:
 
         btn1 = Button(master=self.frame1,
                       text="Total de casos positivos da COVID-19", height=1, width=40,command=lambda:
-            [self.frame1.pack_forget(),self.frameCasosPositivos(tipo).pack()]).pack(padx=20, pady=5)
+            [self.frame1.pack_forget(),self.frameCasosPositivos(tipo,user).pack()]).pack(padx=20, pady=5)
 
         btn2 = Button(master=self.frame1, text="Total de casos suspeitos da COVID-19", height=1, width=40,command=lambda:
-            [self.frame1.pack_forget(),self.frameCasosSuspeitos(tipo).pack()]).pack(padx=20, pady=5)
+            [self.frame1.pack_forget(),self.frameCasosSuspeitos(tipo,user).pack()]).pack(padx=20, pady=5)
 
         btn3 = Button(master=self.frame1,
                       text="20 Hospitais com mais pacientes no último mês", height=1, width=40,command=lambda:
@@ -501,12 +502,86 @@ class Dashboard:
             self.frameCidadeMaisSuspeitos()).pack(padx=20, pady=5)
         btn7 = Button(self.frame1,
                       text="Retornar a Tela Inicial", height=1, width=40,command=lambda:
-            [self.frame1.pack_forget(),self.frameTelaInicial(tipo).pack()]).pack(padx=50, pady=30)
+            [self.frame1.pack_forget(),self.frameTelaInicial(tipo,user).pack()]).pack(padx=50, pady=30)
+
+        return self.frame1
+
+    ##def insertAmostra(self,data,resultado,idlab,idpaciente,idpesquisador):
+
+
+
+
+    def frameSimulacaoCriaAmostra(self,tipo,user):
+
+        self.frame1 = Frame()
+        self.frame1["pady"] = 20
+        self.fontePadrao = ("Arial", "10")
+
+        self.amostra = Label(self.frame1, text="Criação de Amostra")
+        self.amostra["pady"] = 5
+        self.amostra["font"] = self.fontePadrao
+        self.amostra.pack()
+
+        self.dataLabel = Label(self.frame1, text="Data", font=self.fontePadrao)
+        self.dataLabel["pady"] = 5
+        self.dataLabel.pack(side=TOP)
+
+        self.data = Entry(self.frame1)
+        self.data["width"] = 30
+        self.data["font"] = self.fontePadrao
+        self.data.pack(side=TOP)
+
+        self.resultadoLabel = Label(self.frame1, text="Resultado", font=self.fontePadrao)
+        self.resultadoLabel["pady"] = 5
+        self.resultadoLabel.pack(side=TOP)
+
+        self.resultado = Entry(self.frame1)
+        self.resultado["width"] = 30
+        self.resultado["font"] = self.fontePadrao
+        self.resultado.pack(side=TOP)
+
+        self.idLaboratorioLabel = Label(self.frame1, text="ID Laboratório", font=self.fontePadrao)
+        self.idLaboratorioLabel["pady"] = 5
+        self.idLaboratorioLabel.pack(side=TOP)
+
+        self.idLaboratorio = Entry(self.frame1)
+        self.idLaboratorio["width"] = 30
+        self.idLaboratorio["font"] = self.fontePadrao
+        self.idLaboratorio.pack(side=TOP)
+
+        self.idPacienteLabel = Label(self.frame1, text="ID Paciente", font=("Arial", "10"))
+        self.idPacienteLabel["pady"] = 5
+        self.idPacienteLabel.pack(side=TOP)
+
+        self.idPaciente = Entry(self.frame1)
+        self.idPaciente["width"] = 30
+        self.idPaciente["font"] = font=self.fontePadrao
+        self.idPaciente.pack(side=TOP)
+
+        self.idPesquisadorLabel = Label(self.frame1, text="ID Pesquisador", font=("Arial", "10"))
+        self.idPesquisadorLabel["pady"] = 5
+        self.idPesquisadorLabel.pack(side=TOP)
+
+        self.idPesquisador = Entry(self.frame1)
+        self.idPesquisador["width"] = 30
+        self.idPesquisador["font"] = font=self.fontePadrao
+        self.idPesquisador.pack(side=TOP)
+
+        self.mensagem = Label(self.frame1, text="", font=self.fontePadrao)
+        self.mensagem.pack()
+
+        btn1 = Button(self.frame1,
+                      text="Confirmar", height=1, width=40, command=lambda:
+            self.frameTelaInicial(tipo,user).pack()).pack(padx=50, pady=30)
+
+        btn2 = Button(self.frame1,
+                      text="Retornar a Tela Inicial", height=1, width=40, command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacoesTelaInicial(tipo,user).pack()]).pack(padx=50, pady=30)
 
         return self.frame1
 
     #Tela de Simulações
-    def frameSimulacoesTelaInicial(self, tipo):
+    def frameSimulacoesTelaInicial(self, tipo,user):
 
         self.frame1 = Frame()
         self.frame1["pady"] = 10
@@ -514,8 +589,6 @@ class Dashboard:
         self.relatorios = Label(self.frame1, text="Simulações Disponíveis:")
         self.relatorios["font"] = ("Arial", "10")
         self.relatorios.pack()
-
-
 
         if (tipo == 'Medicina' or tipo =='Admin'):
             self.prontuarios = Label(self.frame1, text="Prontuarios")
@@ -547,17 +620,18 @@ class Dashboard:
             self.amostra.pack()
 
             btn5 = Button(master=self.frame1,
-                          text="Criação de Amostra", height=1, width=40).pack(padx=20, pady=5)
+                          text="Criação de Amostra", height=1, width=40,command=lambda:
+            [self.frame1.pack_forget(),self.frameSimulacaoCriaAmostra(tipo,user).pack()]).pack(padx=20, pady=5)
 
             btn6 = Button(master=self.frame1,
                           text="Alteração de Amostra", height=1, width=40).pack(padx=20, pady=5)
             btn7 = Button(self.frame1,
                           text="Retornar a Tela Inicial", height=1, width=40,command=lambda:
-                [self.frame1.pack_forget(),self.frameTelaInicial(tipo).pack()]).pack(padx=20, pady=30)
+                [self.frame1.pack_forget(),self.frameTelaInicial(tipo,user).pack()]).pack(padx=20, pady=30)
 
         return self.frame1
 
-    def frameCasosPositivos(self,tipo):
+    def frameCasosPositivos(self,tipo,user):
         self.frame1 = Frame()
         self.frame1["pady"] = 10
 
@@ -572,11 +646,11 @@ class Dashboard:
 
         btn = Button(self.frame1,
                       text="Retornar a Overview", height=1, width=40, command=lambda:
-            [self.frame1.pack_forget(), self.frameOverviewTelaInicial(tipo).pack()]).pack(padx=20, pady=30)
+            [self.frame1.pack_forget(), self.frameOverviewTelaInicial(tipo,user).pack()]).pack(padx=20, pady=30)
 
         return self.frame1
 
-    def frameCasosSuspeitos(self,tipo):
+    def frameCasosSuspeitos(self,tipo,user):
         self.frame1 = Frame()
         self.frame1["pady"] = 10
 
@@ -591,7 +665,7 @@ class Dashboard:
 
         btn = Button(self.frame1,
                      text="Retornar a Overview", height=1, width=40, command=lambda:
-            [self.frame1.pack_forget(), self.frameOverviewTelaInicial(tipo).pack()]).pack(padx=20, pady=30)
+            [self.frame1.pack_forget(), self.frameOverviewTelaInicial(tipo,user).pack()]).pack(padx=20, pady=30)
 
         return self.frame1
 
@@ -704,7 +778,7 @@ class Dashboard:
         self.depto["font"] = ("Arial", "10")
         self.depto.pack()
 
-        frame_inicial = self.frameTelaInicial(tipo)
+        frame_inicial = self.frameTelaInicial(tipo,user)
 
         frame_inicial.pack()
 
