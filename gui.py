@@ -10,7 +10,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 try:
 
     connection = psycopg2.connect(user = "postgres",
-                                  password = "bilicu",
+                                  password = "teste123",
                                   host = "localhost",
                                   port = "5432",
                                   database = "COVID")
@@ -152,11 +152,10 @@ class Dashboard:
         return self.frame1
 
     #Tela de Relatórios
-    def frameRelatoriosTelaInicial(self, tipo,user):
+    def frameRelatoriosTelaInicial(self,tipo,user):
 
         self.frame1 = Frame()
         self.frame1["pady"] = 10
-
 
         self.relatorios = Label(self.frame1, text="Relatórios Disponíveis:")
         self.relatorios["font"] = ("Arial", "10")
@@ -165,29 +164,29 @@ class Dashboard:
 
         btn1 = Button(master=self.frame1,
                       text="Histórico Pessoal", height=1, width=40, command=lambda:
-            self.frameHistoricoPessoal()).pack(padx=20, pady=5)
+            [self.frame1.pack_forget(), self.frameFiltraRelatorioPessoal(tipo,user).pack()]).pack(padx=20, pady=5)
 
         if(tipo=='Medicina' or tipo == 'Admin'):
 
             btn2 = Button(master=self.frame1, text="Histórico dos Hospitais", height=1, width=40, command=lambda:
-            self.frameHistoricoHospital()).pack(padx=20, pady=5)
+            [self.frame1.pack_forget(), self.frameFiltraRelatorioHospital(tipo,user).pack()]).pack(padx=20, pady=5)
 
             btn3 = Button(master=self.frame1,
                           text="Histórico dos Atendimentos dos Hospitais", height=1, width=40, command=lambda:
-            self.frameHistoricoAtendimentos()).pack(padx=20, pady=5)
+            [self.frame1.pack_forget(), self.frameFiltraRelatorioAtendimento(tipo,user).pack()]).pack(padx=20, pady=5)
 
         if(tipo=='Pesquisa' or tipo == 'Admin'):
             btn4 = Button(master=self.frame1,
                           text="Histórico de Amostras", height=1, width=40, command=lambda:
-            self.frameHistoricoAmostras()).pack(padx=20, pady=5)
+                [self.frame1.pack_forget(), self.frameFiltraRelatorioAmostra(tipo,user).pack()]).pack(padx=20, pady=5)
 
             btn5 = Button(master=self.frame1,
                           text="Histórico de Laboratórios", height=1, width=40, command=lambda:
-            self.frameHistoricoLaboratorios()).pack(padx=20, pady=5)
+            [self.frame1.pack_forget(), self.frameFiltraRelatorioLab(tipo,user).pack()]).pack(padx=20, pady=5)
 
             btn6 = Button(master=self.frame1,
                           text="Histórico de Pesquisadores", height=1, width=40, command=lambda:
-            self.frameHistoricoPesquisadores()).pack(padx=20, pady=5)
+            [self.frame1.pack_forget(), self.frameFiltraRelatorioPesquisa(tipo,user).pack()]).pack(padx=20, pady=5)
 
         btn7 = Button(self.frame1,
                       text="Retornar a Tela Inicial", height=1, width=40, command=lambda:
@@ -195,7 +194,13 @@ class Dashboard:
 
         return self.frame1
 
-    def frameHistoricoPessoal(self):
+    #Função para pegar valor para filtragem de pesquisas
+    def pegavalor(self):
+        var = self.nome.get()
+        return var
+
+    # Exibir tabela com histórico de Pacientes
+    def frameHistoricoPessoal(self, nome):
 
         self.root = Tk()
         self.root.title("Histórico Pessoal do Paciente")
@@ -208,23 +213,8 @@ class Dashboard:
         self.segundoContainer = Frame(self.root)
         self.segundoContainer.pack()
 
-        self.nomeLabel = Label(self.primeiroContainer, text="Nome do Paciente: ", font=self.fontePadrao)
-        self.nomeLabel.pack(side=LEFT)
-
-        self.nome = Entry(self.primeiroContainer)
-        self.nome["width"] = 40
-        self.nome["font"] = self.fontePadrao
-        self.nome.pack(side=LEFT)
-
-        self.filtrar = Button(self.primeiroContainer)
-        self.filtrar["text"] = "Filtrar"
-        self.filtrar["font"] = self.fontePadrao
-        self.filtrar["width"] = 12
-        #self.filtrar["command"] = self.aplicaFiltro
-        self.filtrar.pack()
-
         self.lst = [("Nome", "Idade", "Sexo", "Data de Nascimento", "Contato", "Endereço", "Hospital")]
-        self.list = database.relatorio_historicoPessoal(cursor)
+        self.list = database.relatorio_historicoPessoal(cursor, nome)
         for row in self.list:
             self.lst.append(row)
 
@@ -233,44 +223,58 @@ class Dashboard:
 
         for i in range(total_rows):
             for j in range(total_columns):
-                self.e = Entry(self.segundoContainer, width=20, fg='black',font=('Arial', 8),justify=CENTER)
+                self.e = Entry(self.segundoContainer, width=20, fg='black', font=('Arial', 8), justify=CENTER)
 
                 self.e.grid(row=i, column=j)
                 self.e.insert(END, self.lst[i][j])
 
         self.root.mainloop()
 
+    # Tela para filtragem por nome de paciente
+    def frameFiltraRelatorioPessoal(self,tipo,user):
+        self.frame1 = Frame()
+        self.frame1["pady"] = 10
 
-    def frameHistoricoHospital(self):
+        self.segundoContainer = Frame(self.frame1)
+        self.segundoContainer["pady"] = 20
+        self.segundoContainer["padx"] = 20
+
+        self.textFiltro = Label(self.frame1, text="Deseja Filtrar sua pesquisa?")
+        self.textFiltro["font"] = ("Arial", "15")
+        self.textFiltro.pack()
+
+        btn1 = Button(master=self.frame1, text="Sim", height=1, width=10, command=lambda:
+        self.segundoContainer.pack()).pack(padx=20, pady=5)
+
+        btn2 = Button(master=self.frame1, text="Não", height=1, width=10, command=lambda:
+        [self.frame1.pack_forget(), self.frameRelatoriosTelaInicial(tipo,user).pack(),
+         self.frameHistoricoPessoal('')]).pack(padx=20, pady=5)
+
+        self.nomeLabel = Label(self.segundoContainer, text="Nome do Paciente: ", font=("Arial", "10"))
+        self.nomeLabel.pack(side=LEFT)
+
+        self.nome = Entry(self.segundoContainer)
+        self.nome["width"] = 40
+        self.nome["font"] = ("Arial", "10")
+        self.nome.pack(side=LEFT)
+
+        filtrar = Button(master=self.segundoContainer, text="Filtrar", height=1, width=10, command=lambda:
+        [self.frame1.pack_forget(),self.frameRelatoriosTelaInicial(tipo,user).pack(), self.frameHistoricoPessoal(self.pegavalor())]).pack(padx=20, pady=5)
+
+        return self.frame1
+
+    # Exibir tabela com histórico de Hospitais
+    def frameHistoricoHospital(self, nome):
 
         self.root = Tk()
         self.root.title("Histórico dos Hospitais")
         self.fontePadrao = ("Arial", "10")
 
-        self.primeiroContainer = Frame(self.root)
-        self.primeiroContainer["pady"] = 20
-        self.primeiroContainer.pack()
-
         self.segundoContainer = Frame(self.root)
         self.segundoContainer.pack()
 
-        self.nomeLabel = Label(self.primeiroContainer, text="Nome do Hospital: ", font=self.fontePadrao)
-        self.nomeLabel.pack(side=LEFT)
-
-        self.nome = Entry(self.primeiroContainer)
-        self.nome["width"] = 40
-        self.nome["font"] = self.fontePadrao
-        self.nome.pack(side=LEFT)
-
-        self.filtrar = Button(self.primeiroContainer)
-        self.filtrar["text"] = "Filtrar"
-        self.filtrar["font"] = self.fontePadrao
-        self.filtrar["width"] = 12
-        # self.filtrar["command"] = self.aplicaFiltro
-        self.filtrar.pack()
-
         self.lst = [("Nome", "Endereço", "Funcionários", "Leitos", "Atendimentos Registrados", "Pacientes Atendidos")]
-        self.list = database.relatorio_historicoHospitais(cursor)
+        self.list = database.relatorio_historicoHospitais(cursor, nome)
         for row in self.list:
             self.lst.append(row)
 
@@ -286,36 +290,52 @@ class Dashboard:
 
         self.root.mainloop()
 
-    def frameHistoricoAtendimentos(self):
+    # Tela para filtragem por nome de Hospital
+    def frameFiltraRelatorioHospital(self, tipo, user):
+        self.frame1 = Frame()
+        self.frame1["pady"] = 10
+
+        self.segundoContainer = Frame(self.frame1)
+        self.segundoContainer["pady"] = 20
+        self.segundoContainer["padx"] = 20
+
+        self.textFiltro = Label(self.frame1, text="Deseja Filtrar sua pesquisa?")
+        self.textFiltro["font"] = ("Arial", "15")
+        self.textFiltro.pack()
+
+        btn1 = Button(master=self.frame1, text="Sim", height=1, width=10, command=lambda:
+        self.segundoContainer.pack()).pack(padx=20, pady=5)
+
+        btn2 = Button(master=self.frame1, text="Não", height=1, width=10, command=lambda:
+        [self.frame1.pack_forget(), self.frameRelatoriosTelaInicial(tipo, user).pack(),
+         self.frameHistoricoHospital('')]).pack(padx=20, pady=5)
+
+        self.nomeLabel = Label(self.segundoContainer, text="Nome do Hospital: ", font=("Arial", "10"))
+        self.nomeLabel.pack(side=LEFT)
+
+        self.nome = Entry(self.segundoContainer)
+        self.nome["width"] = 40
+        self.nome["font"] = ("Arial", "10")
+        self.nome.pack(side=LEFT)
+
+        filtrar = Button(master=self.segundoContainer, text="Filtrar", height=1, width=10, command=lambda:
+        [self.frame1.pack_forget(), self.frameRelatoriosTelaInicial(tipo, user).pack(),
+         self.frameHistoricoHospital(self.pegavalor())]).pack(padx=20, pady=5)
+
+        return self.frame1
+
+    # Exibir tabela com histórico de Atendimentos
+    def frameHistoricoAtendimentos(self, nome):
 
         self.root = Tk()
         self.root.title("Histórico de Atendimentos dos Municípios")
         self.fontePadrao = ("Arial", "10")
 
-        self.primeiroContainer = Frame(self.root)
-        self.primeiroContainer["pady"] = 20
-        self.primeiroContainer.pack()
-
         self.segundoContainer = Frame(self.root)
         self.segundoContainer.pack()
 
-        self.nomeLabel = Label(self.primeiroContainer, text="Nome da Cidade: ", font=self.fontePadrao)
-        self.nomeLabel.pack(side=LEFT)
-
-        self.nome = Entry(self.primeiroContainer)
-        self.nome["width"] = 40
-        self.nome["font"] = self.fontePadrao
-        self.nome.pack(side=LEFT)
-
-        self.filtrar = Button(self.primeiroContainer)
-        self.filtrar["text"] = "Filtrar"
-        self.filtrar["font"] = self.fontePadrao
-        self.filtrar["width"] = 12
-        # self.filtrar["command"] = self.aplicaFiltro
-        self.filtrar.pack()
-
         self.lst = [("Cidade", "Atendimentos Realizados", "Pacientes Atendidos")]
-        self.list = database.relatorio_historicoAtendimentos(cursor)
+        self.list = database.relatorio_historicoAtendimentos(cursor, nome)
         for row in self.list:
             self.lst.append(row)
 
@@ -331,36 +351,52 @@ class Dashboard:
 
         self.root.mainloop()
 
-    def frameHistoricoAmostras(self):
+    # Tela para filtragem por nome de Atendimentos
+    def frameFiltraRelatorioAtendimento(self, tipo, user):
+        self.frame1 = Frame()
+        self.frame1["pady"] = 10
+
+        self.segundoContainer = Frame(self.frame1)
+        self.segundoContainer["pady"] = 20
+        self.segundoContainer["padx"] = 20
+
+        self.textFiltro = Label(self.frame1, text="Deseja Filtrar sua pesquisa?")
+        self.textFiltro["font"] = ("Arial", "15")
+        self.textFiltro.pack()
+
+        btn1 = Button(master=self.frame1, text="Sim", height=1, width=10, command=lambda:
+        self.segundoContainer.pack()).pack(padx=20, pady=5)
+
+        btn2 = Button(master=self.frame1, text="Não", height=1, width=10, command=lambda:
+        [self.frame1.pack_forget(), self.frameRelatoriosTelaInicial(tipo, user).pack(),
+         self.frameHistoricoAtendimentos('')]).pack(padx=20, pady=5)
+
+        self.nomeLabel = Label(self.segundoContainer, text="Nome da Cidade: ", font=("Arial", "10"))
+        self.nomeLabel.pack(side=LEFT)
+
+        self.nome = Entry(self.segundoContainer)
+        self.nome["width"] = 40
+        self.nome["font"] = ("Arial", "10")
+        self.nome.pack(side=LEFT)
+
+        filtrar = Button(master=self.segundoContainer, text="Filtrar", height=1, width=10, command=lambda:
+        [self.frame1.pack_forget(), self.frameRelatoriosTelaInicial(tipo, user).pack(),
+         self.frameHistoricoAtendimentos(self.pegavalor())]).pack(padx=20, pady=5)
+
+        return self.frame1
+
+    # Exibir tabela com histórico de Amostras
+    def frameHistoricoAmostras(self, valor):
 
         self.root = Tk()
         self.root.title("Histórico de Amostras")
         self.fontePadrao = ("Arial", "10")
 
-        self.primeiroContainer = Frame(self.root)
-        self.primeiroContainer["pady"] = 20
-        self.primeiroContainer.pack()
-
         self.segundoContainer = Frame(self.root)
         self.segundoContainer.pack()
 
-        self.nomeLabel = Label(self.primeiroContainer, text="Data: ", font=self.fontePadrao)
-        self.nomeLabel.pack(side=LEFT)
-
-        self.nome = Entry(self.primeiroContainer)
-        self.nome["width"] = 40
-        self.nome["font"] = self.fontePadrao
-        self.nome.pack(side=LEFT)
-
-        self.filtrar = Button(self.primeiroContainer)
-        self.filtrar["text"] = "Filtrar"
-        self.filtrar["font"] = self.fontePadrao
-        self.filtrar["width"] = 12
-        # self.filtrar["command"] = self.aplicaFiltro
-        self.filtrar.pack()
-
         self.lst = [("Nome Paciente", "Idade", "Sexo", "Endereço", "Data da Amostra", "Resultado", "Laboratório")]
-        self.list = database.relatorio_historicoAmostras(cursor)
+        self.list = database.relatorio_historicoAmostras(cursor, valor)
         for row in self.list:
             self.lst.append(row)
 
@@ -376,36 +412,51 @@ class Dashboard:
 
         self.root.mainloop()
 
-    def frameHistoricoLaboratorios(self):
+    # Tela para filtragem por data de amostra
+    def frameFiltraRelatorioAmostra(self,tipo,user):
+        self.frame1 = Frame()
+        self.frame1["pady"] = 10
+
+        self.segundoContainer = Frame(self.frame1)
+        self.segundoContainer["pady"] = 20
+        self.segundoContainer["padx"] = 20
+
+        self.textFiltro = Label(self.frame1, text="Deseja Filtrar sua pesquisa?")
+        self.textFiltro["font"] = ("Arial", "15")
+        self.textFiltro.pack()
+
+        btn1 = Button(master=self.frame1, text="Sim", height=1, width=10, command=lambda:
+        self.segundoContainer.pack()).pack(padx=20, pady=5)
+
+        btn2 = Button(master=self.frame1, text="Não", height=1, width=10, command=lambda:
+        [self.frame1.pack_forget(), self.frameRelatoriosTelaInicial(tipo,user).pack(),
+         self.frameHistoricoAmostras('')]).pack(padx=20, pady=5)
+
+        self.nomeLabel = Label(self.segundoContainer, text="Data: ", font=("Arial", "10"))
+        self.nomeLabel.pack(side=LEFT)
+
+        self.nome = Entry(self.segundoContainer)
+        self.nome["width"] = 40
+        self.nome["font"] = ("Arial", "10")
+        self.nome.pack(side=LEFT)
+
+        filtrar = Button(master=self.segundoContainer, text="Filtrar", height=1, width=10, command=lambda:
+        [self.frame1.pack_forget(),self.frameRelatoriosTelaInicial(tipo,user).pack(), self.frameHistoricoAmostras(self.pegavalor())]).pack(padx=20, pady=5)
+
+        return self.frame1
+
+    # Exibir tabela com histórico de Laboratorios
+    def frameHistoricoLaboratorios(self, nome):
 
         self.root = Tk()
         self.root.title("Histórico de Laboratórios")
         self.fontePadrao = ("Arial", "10")
 
-        self.primeiroContainer = Frame(self.root)
-        self.primeiroContainer["pady"] = 20
-        self.primeiroContainer.pack()
-
         self.segundoContainer = Frame(self.root)
         self.segundoContainer.pack()
 
-        self.nomeLabel = Label(self.primeiroContainer, text="Nome do Laboratório: ", font=self.fontePadrao)
-        self.nomeLabel.pack(side=LEFT)
-
-        self.nome = Entry(self.primeiroContainer)
-        self.nome["width"] = 40
-        self.nome["font"] = self.fontePadrao
-        self.nome.pack(side=LEFT)
-
-        self.filtrar = Button(self.primeiroContainer)
-        self.filtrar["text"] = "Filtrar"
-        self.filtrar["font"] = self.fontePadrao
-        self.filtrar["width"] = 12
-        # self.filtrar["command"] = self.aplicaFiltro
-        self.filtrar.pack()
-
         self.lst = [("Nome", "Quantidade Pesquisadores", "Endereço", "Amostras Recebidas")]
-        self.list = database.relatorio_historicoLaboratorios(cursor)
+        self.list = database.relatorio_historicoLaboratorios(cursor, nome)
         for row in self.list:
             self.lst.append(row)
 
@@ -421,36 +472,51 @@ class Dashboard:
 
         self.root.mainloop()
 
-    def frameHistoricoPesquisadores(self):
+    # Tela para filtragem por nome de laboratório
+    def frameFiltraRelatorioLab(self,tipo,user):
+        self.frame1 = Frame()
+        self.frame1["pady"] = 10
+
+        self.segundoContainer = Frame(self.frame1)
+        self.segundoContainer["pady"] = 20
+        self.segundoContainer["padx"] = 20
+
+        self.textFiltro = Label(self.frame1, text="Deseja Filtrar sua pesquisa?")
+        self.textFiltro["font"] = ("Arial", "15")
+        self.textFiltro.pack()
+
+        btn1 = Button(master=self.frame1, text="Sim", height=1, width=10, command=lambda:
+        self.segundoContainer.pack()).pack(padx=20, pady=5)
+
+        btn2 = Button(master=self.frame1, text="Não", height=1, width=10, command=lambda:
+        [self.frame1.pack_forget(), self.frameRelatoriosTelaInicial(tipo,user).pack(),
+         self.frameHistoricoLaboratorios('')]).pack(padx=20, pady=5)
+
+        self.nomeLabel = Label(self.segundoContainer, text="Nome do Laboratório: ", font=("Arial", "10"))
+        self.nomeLabel.pack(side=LEFT)
+
+        self.nome = Entry(self.segundoContainer)
+        self.nome["width"] = 40
+        self.nome["font"] = ("Arial", "10")
+        self.nome.pack(side=LEFT)
+
+        filtrar = Button(master=self.segundoContainer, text="Filtrar", height=1, width=10, command=lambda:
+        [self.frame1.pack_forget(),self.frameRelatoriosTelaInicial(tipo,user).pack(), self.frameHistoricoLaboratorios(self.pegavalor())]).pack(padx=20, pady=5)
+
+        return self.frame1
+
+    #Exibir tabela com histórico de Pesquisadores
+    def frameHistoricoPesquisadores(self, valor):
 
         self.root = Tk()
         self.root.title("Histórico de Pesquisadores")
         self.fontePadrao = ("Arial", "10")
 
-        self.primeiroContainer = Frame(self.root)
-        self.primeiroContainer["pady"] = 20
-        self.primeiroContainer.pack()
-
         self.segundoContainer = Frame(self.root)
         self.segundoContainer.pack()
 
-        self.nomeLabel = Label(self.primeiroContainer, text="Nome do Pesquisador: ", font=self.fontePadrao)
-        self.nomeLabel.pack(side=LEFT)
-
-        self.nome = Entry(self.primeiroContainer)
-        self.nome["width"] = 40
-        self.nome["font"] = self.fontePadrao
-        self.nome.pack(side=LEFT)
-
-        self.filtrar = Button(self.primeiroContainer)
-        self.filtrar["text"] = "Filtrar"
-        self.filtrar["font"] = self.fontePadrao
-        self.filtrar["width"] = 12
-        # self.filtrar["command"] = self.aplicaFiltro
-        self.filtrar.pack()
-
         self.lst = [("Nome", "Registro Institucional", "Data de Contratação", "ID da Amostra", "Data da Amostra", "Resultado Amostra")]
-        self.list = database.relatorio_historicoPesquisadores(cursor)
+        self.list = database.relatorio_historicoPesquisadores(cursor, valor)
         for row in self.list:
             self.lst.append(row)
 
@@ -465,6 +531,39 @@ class Dashboard:
                 self.e.insert(END, self.lst[i][j])
 
         self.root.mainloop()
+
+    #Tela para filtragem por nome de pesquisador
+    def frameFiltraRelatorioPesquisa(self,tipo,user):
+        self.frame1 = Frame()
+        self.frame1["pady"] = 10
+
+        self.segundoContainer = Frame(self.frame1)
+        self.segundoContainer["pady"] = 20
+        self.segundoContainer["padx"] = 20
+
+        self.textFiltro = Label(self.frame1, text="Deseja Filtrar sua pesquisa?")
+        self.textFiltro["font"] = ("Arial", "15")
+        self.textFiltro.pack()
+
+        btn1 = Button(master=self.frame1, text="Sim", height=1, width=10, command=lambda:
+        self.segundoContainer.pack()).pack(padx=20, pady=5)
+
+        btn2 = Button(master=self.frame1, text="Não", height=1, width=10, command=lambda:
+        [self.frame1.pack_forget(), self.frameRelatoriosTelaInicial(tipo,user).pack(),
+         self.frameHistoricoPesquisadores('')]).pack(padx=20, pady=5)
+
+        self.nomeLabel = Label(self.segundoContainer, text="Nome do Pesquisador: ", font=("Arial", "10"))
+        self.nomeLabel.pack(side=LEFT)
+
+        self.nome = Entry(self.segundoContainer)
+        self.nome["width"] = 40
+        self.nome["font"] = ("Arial", "10")
+        self.nome.pack(side=LEFT)
+
+        filtrar = Button(master=self.segundoContainer, text="Filtrar", height=1, width=10, command=lambda:
+        [self.frame1.pack_forget(),self.frameRelatoriosTelaInicial(tipo,user).pack(), self.frameHistoricoPesquisadores(self.pegavalor())]).pack(padx=20, pady=5)
+
+        return self.frame1
 
     #Tela de Overview
     def frameOverviewTelaInicial(self ,tipo,user):
