@@ -98,13 +98,13 @@ def overview_CidadesMaisSuspeitos(cursor):
 
 #============SIMULAÇÕES================================
 def getMaxIDAmostra(cursor):
-    cursor.execute("select max(id_amostra) from amostra")
+    cursor.execute("select max(id_amostra) from amostraCC")
     row = cursor.fetchone()
     return row[0]+1
 
 def insertAmostra(cursor,date,resultado,idLaboratorio,idPaciente,idPesquisador):
     table = 'amostraCC'
-    pesquisa = "INSERT INTO " + table + " VALUES (" + str(getMaxIDAtendimento(cursor)) + ",'" + date + "','" + resultado + "'," + str(idLaboratorio) + ',' + str(idPaciente) + ',' + str(idPesquisador) + ')'
+    pesquisa = "INSERT INTO " + table + " VALUES (" + str(getMaxIDAmostra(cursor)) + ",'" + date + "','" + resultado + "'," + str(idLaboratorio) + ',' + str(idPaciente) + ',' + str(idPesquisador) + ')'
     print(pesquisa)
     cursor.execute(pesquisa)
 
@@ -113,7 +113,7 @@ def resetAmostra(cursor):
     cursor.execute('CREATE TABLE IF NOT EXISTS amostraCC as select * from amostra')
 
 def getMaxIDAtendimento(cursor):
-    cursor.execute("select max(id_atendimento) from atendimento")
+    cursor.execute("select max(id_atendimento) from atendimentoCC")
     row = cursor.fetchone()
     return row[0]+1
 
@@ -121,14 +121,14 @@ def insertAtendimento(cursor,date,grau_avalicao,observacoes,idMedico,idPaciente,
     table = 'atendimentoCC'
     pesquisa = "INSERT INTO " + table + " VALUES (" + str(getMaxIDAtendimento(cursor)) + ",'" + date + "','" + grau_avalicao + "','" +observacoes +"',"+ str(idMedico) + ',' + str(idPaciente) + ',' + str(idProntuario) + ')'
     print(pesquisa)
-    #cursor.execute(pesquisa)
+    cursor.execute(pesquisa)
 
 def resetAtendimento(cursor):
     cursor.execute('DROP TABLE IF EXISTS atendimentoCC')
     cursor.execute('CREATE TABLE IF NOT EXISTS atendimentoCC as select * from atendimento')
 
 def getMaxIDProntuario(cursor):
-    cursor.execute("select max(id_prontuario) from prontuario")
+    cursor.execute("select max(id_prontuario) from prontuarioCC")
     row = cursor.fetchone()
     return row[0]+1
 
