@@ -96,100 +96,48 @@ def overview_CidadesMaisSuspeitos(cursor):
     row = cursor.fetchall()
     return row
 
-def getMaxID(cursor):
+#============SIMULAÇÕES================================
+def getMaxIDAmostra(cursor):
     cursor.execute("select max(id_amostra) from amostra")
     row = cursor.fetchone()
-    return row[0]
+    return row[0]+1
 
-def insertAmostra(cursor,user,date,resultado,idLaboratorio,idPaciente,idPesquisador):
-    idAmostra = getMaxID(cursor) + ','
-    data = "TO_DATE(" + date + ", yyyy-mm-dd)" + ','
-    res = resultado + ','
-    idLab = idLaboratorio + ','
-    idPac = idPaciente + ','
-    idPes = idPesquisador + ''
-    cursor.execute("INSERT INTO amostra" +user+ '(id_amostra,data,resultado,id_laboratorio,id_paciente,id_pesquisador) VALUES('
-                     +idAmostra+ data + res + idLab + idPac + idPes + ')')
+def insertAmostra(cursor,date,resultado,idLaboratorio,idPaciente,idPesquisador):
+    table = 'amostraCC'
+    pesquisa = "INSERT INTO " + table + " VALUES (" + str(getMaxIDAtendimento(cursor)) + ",'" + date + "','" + resultado + "'," + str(idLaboratorio) + ',' + str(idPaciente) + ',' + str(idPesquisador) + ')'
+    print(pesquisa)
+    cursor.execute(pesquisa)
 
-def createViewAmostra(cursor,user):
-    cursor.execute("CREATE VIEW amostra" + user + " as select * from amostra")
-'''
+def resetAmostra(cursor):
+    cursor.execute('DROP TABLE IF EXISTS amostraCC')
+    cursor.execute('CREATE TABLE IF NOT EXISTS amostraCC as select * from amostra')
 
-postgreSQL_select_historico_pessoal = """
-    select
-	P.nome,
-	P.idade,
-	P.sexo,
-	P.data_nasc,
-	concat(P.telefone_fixo,P.telefone_celular) as contato_telefonico,
-	concat(P.cidade,concat(P.estado,P.pais)) as endereco,
-	P.id_hospital,
-	H.nome as Hospital
-	from (select distinct(id_paciente) from amostra where resultado  = 'P') as A
-	JOIN pessoa P
-	ON A.id_paciente = P.id_pessoa
-	JOIN hospital H
-	ON P.id_hospital = H.id_hospital
-    """
+def getMaxIDAtendimento(cursor):
+    cursor.execute("select max(id_atendimento) from atendimento")
+    row = cursor.fetchone()
+    return row[0]+1
 
-    postgreSQL_select_historico_hospitais = """
-    select
-	H.nome,
-	concat(H.cidade,concat(H.estado,H.pais)),
-	H.qtd_funcionario,
-	H.qtd_leitos,
-	Z.qtd_atendimentos,
-	Z.qtd_pacientes
-    from hospital H
-    JOIN (select X.id_hospital,sum(X.qtd_atendimento) as qtd_atendimentos,count(X.id_paciente) as qtd_pacientes from 
-    (select P.id_hospital,A.qtd_atendimento,A.id_paciente
-    from (select count(id_atendimento) as qtd_atendimento,id_paciente from atendimento group by id_paciente) as A
-    JOIN paciente as P
-    ON P.id_paciente=A.id_paciente) as X group by X.id_hospital) as Z
-    ON Z.id_hospital = H.id_hospital
-    """
+def insertAtendimento(cursor,date,grau_avalicao,observacoes,idMedico,idPaciente,idProntuario):
+    table = 'atendimentoCC'
+    pesquisa = "INSERT INTO " + table + " VALUES (" + str(getMaxIDAtendimento(cursor)) + ",'" + date + "','" + grau_avalicao + "','" +observacoes +"',"+ str(idMedico) + ',' + str(idPaciente) + ',' + str(idProntuario) + ')'
+    print(pesquisa)
+    #cursor.execute(pesquisa)
 
-    postgreSQL_select_historico_amostra = """
-    select 
-	P.nome,
-	P.idade,
-	P.sexo,
-	concat(P.cidade,concat(P.estado,P.pais)) as endereco,
-	A.data,
-	A.resultado,
-	A.id_laboratorio
-    from amostra A
-    JOIN pessoa P
-    ON P.id_pessoa = A.id_paciente
-    ORDER BY A.data DESC
-    """
+def resetAtendimento(cursor):
+    cursor.execute('DROP TABLE IF EXISTS atendimentoCC')
+    cursor.execute('CREATE TABLE IF NOT EXISTS atendimentoCC as select * from atendimento')
 
-    postgreSQL_select_historico_laboratorios="""
-    select
-	L.nome,
-	L.qtd_pesquisadores,
-	concat(L.cidade,concat(L.estado,L.pais)) as endereco,
-	A.qtd as qtd_amostras
-	from (select id_laboratorio,count(id_amostra) as qtd from amostra group by id_laboratorio) as A
-	JOIN laboratorio as L
-	ON L.id_laboratorio = A.id_laboratorio
-    """
+def getMaxIDProntuario(cursor):
+    cursor.execute("select max(id_prontuario) from prontuario")
+    row = cursor.fetchone()
+    return row[0]+1
 
-    postgreSQL_select_historico_pesquisadores = """
-    select 
-	pessoa.nome,
-	funcionario.registro_institucional,
-	funcionario.data_contratacao,
-	amostra.id_amostra,
-	amostra.data,
-	amostra.resultado
-	from pesquisador
-    JOIN pessoa
-    ON pesquisador.id_pesquisador = pessoa.id_pessoa
-    JOIN funcionario
-    ON funcionario.id_funcionario = pesquisador.id_pesquisador
-    JOIN amostra
-    ON pesquisador.id_pesquisador = amostra.id_pesquisador
-    """
+def insertProntuario(cursor,id_paciente):
+    table = 'prontuarioCC'
+    pesquisa = "INSERT INTO " + table + " VALUES (" + str(getMaxIDProntuario(cursor)) + "," + str(id_paciente) + ')'
+    print(pesquisa)
+    cursor.execute(pesquisa)
 
-'''
+def resetProntuario(cursor):
+    cursor.execute('DROP TABLE IF EXISTS prontuarioCC')
+    cursor.execute('CREATE TABLE IF NOT EXISTS prontuarioCC as select * from prontuario')
