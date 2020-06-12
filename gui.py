@@ -150,10 +150,11 @@ class Dashboard:
                       text="Overview", height=3, width=40,command=lambda:
             [self.frame1.pack_forget(),self.frameOverviewTelaInicial(tipo).pack()]).pack(padx=20, pady=5)
 
-
         return self.frame1
+##################################################################################################
 
     #Tela de Relatórios
+
     def frameRelatoriosTelaInicial(self,tipo):
 
         self.frame1 = Frame()
@@ -567,7 +568,10 @@ class Dashboard:
 
         return self.frame1
 
+#######################################################################################
+
     #Tela de Overview
+
     def frameOverviewTelaInicial(self ,tipo):
 
         self.frame1 = Frame()
@@ -607,229 +611,6 @@ class Dashboard:
 
         return self.frame1
 
-    def insereAtendimento(self,date,grau_avalicao,observacoes,idMedico,idPaciente,idProntuario):
-        database.insertAtendimento(cursor,date,grau_avalicao,observacoes,idMedico,idPaciente,idProntuario)
-
-    def limpaAtendimento(self):
-        database.resetAtendimento(cursor)
-        messagebox.showinfo("Reset Atendimento", "Tabela Atendimento voltou ao seu estado original")
-
-    def frameSimulacaoCriaAtendimento(self,tipo):
-
-        def change():
-            messagebox.showinfo("Inserção", "Inserido com sucesso")
-            self.data.delete(0, 'end')
-            self.grau_avaliacao.delete(0, 'end')
-            self.observacoes.delete(0, 'end')
-            self.idMedico.delete(0, 'end')
-            self.idPaciente.delete(0, 'end')
-            self.idProntuario.delete(0, 'end')
-
-        self.frame1 = Frame()
-        self.frame1["pady"] = 20
-        self.fontePadrao = ("Arial", "10")
-
-        self.atendimento = Label(self.frame1, text="Criação do Atendimento")
-        self.atendimento["pady"] = 5
-        self.atendimento["font"] = self.fontePadrao
-        self.atendimento.pack()
-
-        self.dataLabel = Label(self.frame1, text="Data", font=self.fontePadrao)
-        self.dataLabel["pady"] = 5
-        self.dataLabel.pack(side=TOP)
-
-        self.data = Entry(self.frame1)
-        self.data["width"] = 30
-        self.data["font"] = self.fontePadrao
-        self.data.pack(side=TOP)
-
-        self.grau_avaliacaoLabel = Label(self.frame1, text="Grau de Avaliação", font=self.fontePadrao)
-        self.grau_avaliacaoLabel["pady"] = 5
-        self.grau_avaliacaoLabel.pack(side=TOP)
-
-        self.grau_avaliacao = Entry(self.frame1)
-        self.grau_avaliacao["width"] = 30
-        self.grau_avaliacao["font"] = self.fontePadrao
-        self.grau_avaliacao.pack(side=TOP)
-
-        self.observacoesLabel = Label(self.frame1, text="Observações", font=self.fontePadrao)
-        self.observacoesLabel["pady"] = 5
-        self.observacoesLabel.pack(side=TOP)
-
-        self.observacoes = Entry(self.frame1)
-        self.observacoes["width"] = 30
-        self.observacoes["font"] = self.fontePadrao
-        self.observacoes.pack(side=TOP)
-
-        self.idMedicoLabel = Label(self.frame1, text="ID Médico", font=self.fontePadrao)
-        self.idMedicoLabel["pady"] = 5
-        self.idMedicoLabel.pack(side=TOP)
-
-        self.idMedico = Entry(self.frame1)
-        self.idMedico["width"] = 30
-        self.idMedico["font"] = self.fontePadrao
-        self.idMedico.pack(side=TOP)
-
-        self.idPacienteLabel = Label(self.frame1, text="ID Paciente", font=("Arial", "10"))
-        self.idPacienteLabel["pady"] = 5
-        self.idPacienteLabel.pack(side=TOP)
-
-        self.idPaciente = Entry(self.frame1)
-        self.idPaciente["width"] = 30
-        self.idPaciente["font"] = font=self.fontePadrao
-        self.idPaciente.pack(side=TOP)
-
-        self.idProntuarioLabel = Label(self.frame1, text="ID Prontuário", font=("Arial", "10"))
-        self.idProntuarioLabel["pady"] = 5
-        self.idProntuarioLabel.pack(side=TOP)
-
-        self.idProntuario = Entry(self.frame1)
-        self.idProntuario["width"] = 30
-        self.idProntuario["font"] = font=self.fontePadrao
-        self.idProntuario.pack(side=TOP)
-
-        self.mensagem = Label(self.frame1, text="", font=self.fontePadrao)
-        self.mensagem.pack()
-
-        btn1 = Button(self.frame1,
-                      text="Confirmar", height=1, width=40,command=lambda:
-            [self.insereAtendimento(self.data.get(),self.grau_avaliacao.get(),self.observacoes.get(),self.idMedico.get(),self.idPaciente.get(),self.idProntuario.get()),change()]).pack(padx=50, pady=30)
-
-        btn2 = Button(self.frame1,
-                      text="Retornar a Tela Inicial", height=1, width=40, command=lambda:
-            [self.frame1.pack_forget(), self.frameSimulacoesTelaInicial(tipo).pack()]).pack(padx=50)
-
-        return self.frame1
-
-    def insereProntuario(self,id_paciente):
-        database.insertProntuario(cursor,id_paciente)
-
-    def limpaProntuario(self):
-        database.resetProntuario(cursor)
-        messagebox.showinfo("Reset Prontuário", "Tabela Prontuário voltou ao seu estado original")
-
-    def frameSimulacaoCriaProntuario(self,tipo):
-
-        def change():
-            messagebox.showinfo("Inserção", "Inserido com sucesso")
-            self.idPaciente.delete(0, 'end')
-
-        self.frame1 = Frame()
-        self.frame1["pady"] = 20
-        self.fontePadrao = ("Arial", "10")
-
-        self.prontuario = Label(self.frame1, text="Criação de Prontuário")
-        self.prontuario["pady"] = 5
-        self.prontuario["font"] = self.fontePadrao
-        self.prontuario.pack()
-
-        self.idPacienteLabel = Label(self.frame1, text="ID Paciente", font=("Arial", "10"))
-        self.idPacienteLabel["pady"] = 5
-        self.idPacienteLabel.pack(side=TOP)
-
-        self.idPaciente = Entry(self.frame1)
-        self.idPaciente["width"] = 30
-        self.idPaciente["font"] = font=self.fontePadrao
-        self.idPaciente.pack(side=TOP)
-
-        self.mensagem = Label(self.frame1, text="", font=self.fontePadrao)
-        self.mensagem.pack()
-
-        btn1 = Button(self.frame1,
-                      text="Confirmar", height=1, width=40,command=lambda:
-            [self.insereProntuario(self.idPaciente.get()),change()]).pack(padx=50, pady=30)
-
-        btn2 = Button(self.frame1,
-                      text="Retornar a Tela Inicial", height=1, width=40, command=lambda:
-            [self.frame1.pack_forget(), self.frameSimulacoesTelaInicial(tipo).pack()]).pack(padx=50, pady=30)
-
-        return self.frame1
-
-    def insereAmostra(self,data,resultado,id_laboratorio,id_paciente,id_pesquisador):
-        database.insertAmostra(cursor,data, resultado, id_laboratorio, id_paciente, id_pesquisador)
-
-    def limpaAmostra(self):
-        database.resetAmostra(cursor)
-        messagebox.showinfo("Reset Amostra", "Tabela Amostra voltou ao seu estado original")
-
-    def frameSimulacaoCriaAmostra(self,tipo):
-
-        def change():
-            messagebox.showinfo("Inserção", "Inserido com sucesso")
-            self.data.delete(0, 'end')
-            self.resultado.delete(0, 'end')
-            self.idLaboratorio.delete(0, 'end')
-            self.idPesquisador.delete(0, 'end')
-            self.idPaciente.delete(0, 'end')
-
-        self.frame1 = Frame()
-        self.frame1["pady"] = 20
-        self.fontePadrao = ("Arial", "10")
-
-        self.amostra = Label(self.frame1, text="Criação de Amostra")
-        self.amostra["pady"] = 5
-        self.amostra["font"] = self.fontePadrao
-        self.amostra.pack()
-
-        self.dataLabel = Label(self.frame1, text="Data", font=self.fontePadrao)
-        self.dataLabel["pady"] = 5
-        self.dataLabel.pack(side=TOP)
-
-        self.data = Entry(self.frame1)
-        self.data["width"] = 30
-        self.data["font"] = self.fontePadrao
-        self.data.pack(side=TOP)
-
-        self.resultadoLabel = Label(self.frame1, text="Resultado", font=self.fontePadrao)
-        self.resultadoLabel["pady"] = 5
-        self.resultadoLabel.pack(side=TOP)
-
-        self.resultado = Entry(self.frame1)
-        self.resultado["width"] = 30
-        self.resultado["font"] = self.fontePadrao
-        self.resultado.pack(side=TOP)
-
-        self.idLaboratorioLabel = Label(self.frame1, text="ID Laboratório", font=self.fontePadrao)
-        self.idLaboratorioLabel["pady"] = 5
-        self.idLaboratorioLabel.pack(side=TOP)
-
-        self.idLaboratorio = Entry(self.frame1)
-        self.idLaboratorio["width"] = 30
-        self.idLaboratorio["font"] = self.fontePadrao
-        self.idLaboratorio.pack(side=TOP)
-
-        self.idPacienteLabel = Label(self.frame1, text="ID Paciente", font=("Arial", "10"))
-        self.idPacienteLabel["pady"] = 5
-        self.idPacienteLabel.pack(side=TOP)
-
-        self.idPaciente = Entry(self.frame1)
-        self.idPaciente["width"] = 30
-        self.idPaciente["font"] = font=self.fontePadrao
-        self.idPaciente.pack(side=TOP)
-
-        self.idPesquisadorLabel = Label(self.frame1, text="ID Pesquisador", font=("Arial", "10"))
-        self.idPesquisadorLabel["pady"] = 5
-        self.idPesquisadorLabel.pack(side=TOP)
-
-        self.idPesquisador = Entry(self.frame1)
-        self.idPesquisador["width"] = 30
-        self.idPesquisador["font"] = font=self.fontePadrao
-        self.idPesquisador.pack(side=TOP)
-
-        self.mensagem = Label(self.frame1, text="", font=self.fontePadrao)
-        self.mensagem.pack()
-
-        btn1 = Button(self.frame1,
-                      text="Confirmar", height=1, width=40,command=lambda:
-            [self.insereAmostra(self.data.get(),self.resultado.get(),self.idLaboratorio.get(),self.idPaciente.get(),self.idPesquisador.get()),change()]).pack(padx=50, pady=30)
-
-        btn2 = Button(self.frame1,
-                      text="Retornar a Tela Inicial", height=1, width=40, command=lambda:
-            [self.frame1.pack_forget(), self.frameSimulacoesTelaInicial(tipo).pack()]).pack(padx=50, pady=30)
-
-        return self.frame1
-
-    #Tela de Simulações
     def frameSimulacoesTelaInicial(self, tipo):
 
         self.frame1 = Frame()
@@ -850,9 +631,13 @@ class Dashboard:
                           text="Criação de Prontuário", height=1, width=40,command=lambda:
             [self.frame1.pack_forget(),self.frameSimulacaoCriaProntuario(tipo).pack()]).pack(padx=20)
 
-            btn2 = Button(master=self.frame1, text="Alteração de Prontuario", height=1, width=40).pack(padx=20)
+            btn2 = Button(master=self.frame1, text="Visualização de Prontuario", height=1, width=40,command=lambda:
+            self.frameshowSimulacaoProntuario()).pack(padx=20)
 
-            btn3 = Button(master=self.frame1,
+            btn3 = Button(master=self.frame1, text="Alteração de Prontuario", height=1, width=40,command=lambda:
+            [self.frame1.pack_forget(),self.frameSimulacaoAlteraProntuario(tipo).pack()]).pack(padx=20)
+
+            btn4 = Button(master=self.frame1,
                           text="Limpar Simulação Prontuário", height=1, width=40,command=lambda: self.limpaProntuario()).pack(padx=20)
 
             self.atendimentos = Label(self.frame1, text="Atendimentos")
@@ -860,14 +645,17 @@ class Dashboard:
             self.atendimentos["font"] = ("Arial", "10")
             self.atendimentos.pack()
 
-            btn4 = Button(master=self.frame1,
+            btn5 = Button(master=self.frame1,
                           text="Criação de Atendimento", height=1, width=40,command=lambda:
             [self.frame1.pack_forget(),self.frameSimulacaoCriaAtendimento(tipo).pack()]).pack(padx=20)
 
-            btn5 = Button(master=self.frame1,
-                          text="Alteração de Atendimento", height=1, width=40).pack(padx=20)
-
             btn6 = Button(master=self.frame1,
+                          text="Visualização de Atendimento", height=1, width=40,command=lambda:
+            self.frameshowSimulacaoAtendimento()).pack(padx=20)
+            btn7 = Button(master=self.frame1,
+                          text="Alteração de Atendimento", height=1, width=40,command=lambda:
+            [self.frame1.pack_forget(),self.frameSimulacaoAlteraAtendimento(tipo).pack()]).pack(padx=20)
+            btn8 = Button(master=self.frame1,
                           text="Limpar Simulação Atendimento", height=1, width=40,command=lambda: self.limpaAtendimento()).pack(padx=20)
 
         if (tipo == 'Pesquisa' or tipo == 'Admin'):
@@ -876,15 +664,19 @@ class Dashboard:
             self.amostra["font"] = ("Arial", "10")
             self.amostra.pack()
 
-            btn7 = Button(master=self.frame1,
+            btn9 = Button(master=self.frame1,
                           text="Criação de Amostra", height=1, width=40,command=lambda:
             [self.frame1.pack_forget(),self.frameSimulacaoCriaAmostra(tipo).pack()]).pack(padx=20)
 
-            btn8 = Button(master=self.frame1,
-                          text="Alteração de Amostra", height=1, width=40).pack(padx=20)
-            btn9 = Button(master=self.frame1,
+            btn10 = Button(master=self.frame1,
+                          text="Visualização de Amostra", height=1, width=40,command=lambda:
+            self.frameshowSimulacaoAmostra()).pack(padx=20)
+            btn11 = Button(master=self.frame1,
+                          text="Alteração de Amostra", height=1, width=40,command=lambda:
+            [self.frame1.pack_forget(),self.frameSimulacaoAlteraAmostra(tipo).pack()]).pack(padx=20)
+            btn12 = Button(master=self.frame1,
                           text="Limpar Simulação Amostra", height=1, width=40,command=lambda: self.limpaAmostra()).pack(padx=20)
-            btn10 = Button(self.frame1,
+            btn13 = Button(self.frame1,
                           text="Retornar a Tela Inicial", height=1, width=40,command=lambda:
                 [self.frame1.pack_forget(),self.frameTelaInicial(tipo).pack()]).pack(padx=20, pady=10)
 
@@ -1015,11 +807,715 @@ class Dashboard:
                 self.e.insert(END, self.lst[i][j])
 
         self.root.mainloop()
+##################################################################################################
 
+    #Tela de Simulacoes
+
+    #ATENDIMENTOS
+
+    #Função de chamada ao banco de dados - UPDATE
+    def alteraAtendimento(self,id_atendimento,data,grau_avaliacao,observacao):
+
+        database.updateAtendimento(cursor,id_atendimento,data,grau_avaliacao,observacao)
+
+    #Funcao de chamada ao banco de dados - INSERT
+    def insereAtendimento(self,date,grau_avalicao,observacoes,idMedico,idPaciente,idProntuario):
+        database.insertAtendimento(cursor,date,grau_avalicao,observacoes,idMedico,idPaciente,idProntuario)
+
+    #Funcao de chamada ao banco de dados - DROP AND INSERT
+    def limpaAtendimento(self):
+        database.resetAtendimento(cursor)
+        messagebox.showinfo("Reset Atendimento", "Tabela Atendimento voltou ao seu estado original")
+
+    #Funcao que mostra a tabela simulada
+    def frameshowSimulacaoAtendimento(self):
+
+        self.root = Tk()
+        self.root.title("Visualização Simulação Atendimento")
+
+        self.lst = [("ID Atendimento", "Data","Grau de Avaliação,","Observações","ID Médico","ID Paciente","ID Prontuário")]
+        self.list = database.showAtendimento(cursor)
+        for row in self.list:
+            self.lst.append(row)
+
+        total_rows = len(self.lst)
+        total_columns = len(self.lst[0])
+
+        for i in range(total_rows):
+            for j in range(total_columns):
+                self.e = Entry(self.root, width=20, fg='black',font=('Arial', 12),justify=CENTER)
+
+                self.e.grid(row=i, column=j)
+                self.e.insert(END, self.lst[i][j])
+
+        self.root.mainloop()
+
+    #Funcao Forms para insercao de atendimento
+    def frameSimulacaoCriaAtendimento(self,tipo):
+
+        def change():
+            messagebox.showinfo("Inserção", "Inserido com sucesso")
+            self.data.delete(0, 'end')
+            self.grau_avaliacao.delete(0, 'end')
+            self.observacoes.delete(0, 'end')
+            self.idMedico.delete(0, 'end')
+            self.idPaciente.delete(0, 'end')
+            self.idProntuario.delete(0, 'end')
+
+        self.frame1 = Frame()
+        self.frame1["pady"] = 20
+        self.fontePadrao = ("Arial", "10")
+
+        self.atendimento = Label(self.frame1, text="Criação do Atendimento")
+        self.atendimento["pady"] = 5
+        self.atendimento["font"] = self.fontePadrao
+        self.atendimento.pack()
+
+        self.dataLabel = Label(self.frame1, text="Data", font=self.fontePadrao)
+        self.dataLabel["pady"] = 5
+        self.dataLabel.pack(side=TOP)
+
+        self.data = Entry(self.frame1)
+        self.data["width"] = 30
+        self.data["font"] = self.fontePadrao
+        self.data.pack(side=TOP)
+
+        self.grau_avaliacaoLabel = Label(self.frame1, text="Grau de Avaliação", font=self.fontePadrao)
+        self.grau_avaliacaoLabel["pady"] = 5
+        self.grau_avaliacaoLabel.pack(side=TOP)
+
+        self.grau_avaliacao = Entry(self.frame1)
+        self.grau_avaliacao["width"] = 30
+        self.grau_avaliacao["font"] = self.fontePadrao
+        self.grau_avaliacao.pack(side=TOP)
+
+        self.observacoesLabel = Label(self.frame1, text="Observações", font=self.fontePadrao)
+        self.observacoesLabel["pady"] = 5
+        self.observacoesLabel.pack(side=TOP)
+
+        self.observacoes = Entry(self.frame1)
+        self.observacoes["width"] = 30
+        self.observacoes["font"] = self.fontePadrao
+        self.observacoes.pack(side=TOP)
+
+        self.idMedicoLabel = Label(self.frame1, text="ID Médico", font=self.fontePadrao)
+        self.idMedicoLabel["pady"] = 5
+        self.idMedicoLabel.pack(side=TOP)
+
+        self.idMedico = Entry(self.frame1)
+        self.idMedico["width"] = 30
+        self.idMedico["font"] = self.fontePadrao
+        self.idMedico.pack(side=TOP)
+
+        self.idPacienteLabel = Label(self.frame1, text="ID Paciente", font=("Arial", "10"))
+        self.idPacienteLabel["pady"] = 5
+        self.idPacienteLabel.pack(side=TOP)
+
+        self.idPaciente = Entry(self.frame1)
+        self.idPaciente["width"] = 30
+        self.idPaciente["font"] = font=self.fontePadrao
+        self.idPaciente.pack(side=TOP)
+
+        self.idProntuarioLabel = Label(self.frame1, text="ID Prontuário", font=("Arial", "10"))
+        self.idProntuarioLabel["pady"] = 5
+        self.idProntuarioLabel.pack(side=TOP)
+
+        self.idProntuario = Entry(self.frame1)
+        self.idProntuario["width"] = 30
+        self.idProntuario["font"] = font=self.fontePadrao
+        self.idProntuario.pack(side=TOP)
+
+        self.mensagem = Label(self.frame1, text="", font=self.fontePadrao)
+        self.mensagem.pack()
+
+        btn1 = Button(self.frame1,
+                      text="Confirmar", height=1, width=40,command=lambda:
+            [self.insereAtendimento(self.data.get(),self.grau_avaliacao.get(),self.observacoes.get(),self.idMedico.get(),self.idPaciente.get(),self.idProntuario.get()),change()]).pack(padx=50, pady=30)
+
+        btn2 = Button(self.frame1,
+                      text="Retornar a Tela Inicial", height=1, width=40, command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacoesTelaInicial(tipo).pack()]).pack(padx=50)
+
+        return self.frame1
+
+    #Funcao que recebe id de atendimento a ser alterado
+    def frameSimulacaoAlteraAtendimento(self,tipo):
+
+        self.frame1 = Frame()
+        self.frame1["pady"] = 20
+        self.fontePadrao = ("Arial", "10")
+
+        #Label Inicial
+        self.atendimento = Label(self.frame1, text="Alteração de Atendimento")
+        self.atendimento["pady"] = 5
+        self.atendimento["font"] = self.fontePadrao
+        self.atendimento.pack()
+
+        #Label de ID Atendimento
+        self.idLabel = Label(self.frame1, text="Selecione o ID de Atendimento", font=self.fontePadrao)
+        self.idLabel["pady"] = 20
+        self.idLabel.pack()
+
+        self.id = Entry(self.frame1)
+        self.id["width"] = 30
+        self.id["font"] = self.fontePadrao
+        self.id.pack()
+
+        self.btn1 = Button(self.frame1,
+                      text="Confirmar", height=1, width=40,command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacaoAlteraMostraAtendimento(tipo,self.id.get()).pack()]).pack(padx=50, pady=30)
+
+        btn2 = Button(self.frame1,
+                      text="Retornar a Tela Simulaçãoes", height=1, width=40, command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacoesTelaInicial(tipo).pack()]).pack(padx=50, pady=30)
+
+        return self.frame1
+
+    #Funcao que confirma tupla a ser alterada
+    def frameSimulacaoAlteraMostraAtendimento(self,tipo,id_atendimento):
+
+        self.frame1 = Frame()
+        self.frame1["pady"] = 20
+        self.fontePadrao = ("Arial", "10")
+
+        # Label de Dados
+        self.info1Label = Label(self.frame1, text="", font=self.fontePadrao)
+        self.info2Label = Label(self.frame1, text="", font=self.fontePadrao)
+        self.info3Label = Label(self.frame1, text="", font=self.fontePadrao)
+        self.info4Label = Label(self.frame1, text="", font=self.fontePadrao)
+        self.info5Label = Label(self.frame1, text="", font=self.fontePadrao)
+        self.info6Label = Label(self.frame1, text="", font=self.fontePadrao)
+        self.info7Label = Label(self.frame1, text="", font=self.fontePadrao)
+
+        self.mensagem = Label(self.frame1, text="", font=self.fontePadrao)
+        self.mensagem.pack()
+
+        self.info1Label.pack()
+        self.info2Label.pack()
+        self.info3Label.pack()
+        self.info4Label.pack()
+        self.info5Label.pack()
+        self.info6Label.pack()
+        self.info7Label.pack()
+
+        row = database.getAtendimento(cursor, id_atendimento)
+
+        if (row == None):
+            self.mensagem['text'] = "Atendimento não encontrado"
+            self.mensagem.pack()
+
+        else:
+            self.info1Label['text'] = "ID Atendimento: " + str(row[0])
+            self.info2Label['text'] = "Data: " + str(row[1])
+            self.info3Label['text'] = "Grau de Avaliação: " + row[2]
+            self.info4Label['text'] = "Observações: " + row[3]
+            self.info5Label['text'] = "ID Médico: " + str(row[4])
+            self.info6Label['text'] = "ID Paciente: " + str(row[5])
+            self.info7Label['text'] = "ID Prontuário: " + str(row[6])
+
+            btn1 = Button(self.frame1,text="Confirmar", height=1, width=40,command=lambda:[self.frame1.pack_forget(),self.frameSimulacaoAlteraConfirmaAtendimento(tipo,id_atendimento).pack()]).pack(padx=50, pady=30)
+
+        btn2 = Button(self.frame1,
+                      text="Retornar a procura de Atendimento", height=1, width=40, command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacaoAlteraAtendimento(tipo).pack()]).pack(padx=50, pady=30)
+
+        return self.frame1
+
+    #Funcao que realiza o update da tupla alterada
+    def frameSimulacaoAlteraConfirmaAtendimento(self,tipo,id_atendimento):
+
+        def change():
+            messagebox.showinfo("Alteração", "Alterado com sucesso")
+            self.data.delete(0, 'end')
+            self.grauAvaliacao.delete(0, 'end')
+            self.observacao.delete(0, 'end')
+
+        self.frame1 = Frame()
+        self.frame1["pady"] = 20
+        self.fontePadrao = ("Arial", "10")
+
+        #Label Inicial
+        self.atendimento = Label(self.frame1, text="Alteração de Atendimento")
+        self.atendimento["pady"] = 5
+        self.atendimento["font"] = self.fontePadrao
+        self.atendimento.pack()
+
+        #Label de alteração data Atendimento
+        self.dataLabel = Label(self.frame1, text="Data", font=self.fontePadrao)
+        self.dataLabel["pady"] = 20
+        self.dataLabel.pack()
+
+        self.data = Entry(self.frame1)
+        self.data["width"] = 30
+        self.data["font"] = self.fontePadrao
+        self.data.pack()
+
+        # Label de alteração grau de avaliação Amostra
+        self.grauAvaliacaoLabel = Label(self.frame1, text="Grau de Avaliação", font=self.fontePadrao)
+        self.grauAvaliacaoLabel["pady"] = 20
+        self.grauAvaliacaoLabel.pack()
+
+        self.grauAvaliacao = Entry(self.frame1)
+        self.grauAvaliacao["width"] = 30
+        self.grauAvaliacao["font"] = self.fontePadrao
+        self.grauAvaliacao.pack()
+
+        self.observacaoLabel = Label(self.frame1, text="Observação", font=self.fontePadrao)
+        self.observacaoLabel["pady"] = 20
+        self.observacaoLabel.pack()
+
+        self.observacao = Entry(self.frame1)
+        self.observacao["width"] = 30
+        self.observacao["font"] = self.fontePadrao
+        self.observacao.pack()
+
+        btn1 = Button(self.frame1,
+                      text="Confirmar", height=1, width=40,command=lambda:
+            [self.alteraAtendimento(id_atendimento,self.data.get(),self.grauAvaliacao.get(),self.observacao.get()),change()]).pack(padx=50, pady=30)
+
+        btn2 = Button(self.frame1,
+                      text="Retornar a Tela Simulaçãoes", height=1, width=40, command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacoesTelaInicial(tipo).pack()]).pack(padx=50, pady=30)
+
+        return self.frame1
+
+#-----------------------------------------------------------------------------------
+
+    # Prontuario
+
+    # Função de chamada ao banco de dados - UPDATE
+    def alteraProntuario(self, id_prontuario, id_paciente):
+        database.updateProntuario(cursor, id_prontuario, id_paciente)
+
+    # Funcao de chamada ao banco de dados - INSERT
+    def insereProntuario(self,id_paciente):
+        database.insertProntuario(cursor,id_paciente)
+
+    # Funcao de chamada ao banco de dados - DROP AND INSERT
+    def limpaProntuario(self):
+        database.resetProntuario(cursor)
+        messagebox.showinfo("Reset Prontuário", "Tabela Prontuário voltou ao seu estado original")
+
+    # Funcao que mostra a tabela simulada
+    def frameshowSimulacaoProntuario(self):
+
+        self.root = Tk()
+        self.root.title("Visualização Simulação Prontuário")
+
+        self.lst = [("ID Prontuário", "ID Paciente")]
+        self.list = database.showProntuario(cursor)
+        for row in self.list:
+            self.lst.append(row)
+
+        total_rows = len(self.lst)
+        total_columns = len(self.lst[0])
+
+        for i in range(total_rows):
+            for j in range(total_columns):
+                self.e = Entry(self.root, width=20, fg='black',font=('Arial', 12),justify=CENTER)
+
+                self.e.grid(row=i, column=j)
+                self.e.insert(END, self.lst[i][j])
+
+        self.root.mainloop()
+
+    # Funcao Forms para insercao de prontuario
+    def frameSimulacaoCriaProntuario(self,tipo):
+
+        def change():
+            messagebox.showinfo("Inserção", "Inserido com sucesso")
+            self.idPaciente.delete(0, 'end')
+
+        self.frame1 = Frame()
+        self.frame1["pady"] = 20
+        self.fontePadrao = ("Arial", "10")
+
+        self.prontuario = Label(self.frame1, text="Criação de Prontuário")
+        self.prontuario["pady"] = 5
+        self.prontuario["font"] = self.fontePadrao
+        self.prontuario.pack()
+
+        self.idPacienteLabel = Label(self.frame1, text="ID Paciente", font=("Arial", "10"))
+        self.idPacienteLabel["pady"] = 5
+        self.idPacienteLabel.pack(side=TOP)
+
+        self.idPaciente = Entry(self.frame1)
+        self.idPaciente["width"] = 30
+        self.idPaciente["font"] = font=self.fontePadrao
+        self.idPaciente.pack(side=TOP)
+
+        self.mensagem = Label(self.frame1, text="", font=self.fontePadrao)
+        self.mensagem.pack()
+
+        btn1 = Button(self.frame1,
+                      text="Confirmar", height=1, width=40,command=lambda:
+            [self.insereProntuario(self.idPaciente.get()),change()]).pack(padx=50, pady=30)
+
+        btn2 = Button(self.frame1,
+                      text="Retornar a Tela Inicial", height=1, width=40, command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacoesTelaInicial(tipo).pack()]).pack(padx=50, pady=30)
+
+        return self.frame1
+
+    # Funcao que recebe id de prontuario a ser alterado
+    def frameSimulacaoAlteraProntuario(self, tipo):
+
+        self.frame1 = Frame()
+        self.frame1["pady"] = 20
+        self.fontePadrao = ("Arial", "10")
+
+        # Label Inicial
+        self.amostra = Label(self.frame1, text="Alteração de Prontuário")
+        self.amostra["pady"] = 5
+        self.amostra["font"] = self.fontePadrao
+        self.amostra.pack()
+
+        # Label de ID AMOSTRA
+        self.idLabel = Label(self.frame1, text="Selecione o ID de Prontuário", font=self.fontePadrao)
+        self.idLabel["pady"] = 20
+        self.idLabel.pack()
+
+        self.id = Entry(self.frame1)
+        self.id["width"] = 30
+        self.id["font"] = self.fontePadrao
+        self.id.pack()
+
+        self.btn1 = Button(self.frame1,
+                           text="Confirmar", height=1, width=40, command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacaoAlteraMostraProntuario(tipo, self.id.get()).pack()]).pack(
+            padx=50, pady=30)
+
+        btn2 = Button(self.frame1,
+                      text="Retornar a Tela Simulaçãoes", height=1, width=40, command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacoesTelaInicial(tipo).pack()]).pack(padx=50, pady=30)
+
+        return self.frame1
+
+    # Funcao que confirma tupla a ser alterada
+    def frameSimulacaoAlteraMostraProntuario(self,tipo,id_prontuario):
+
+        self.frame1 = Frame()
+        self.frame1["pady"] = 20
+        self.fontePadrao = ("Arial", "10")
+
+        # Label de Dados
+        self.info1Label = Label(self.frame1, text="", font=self.fontePadrao)
+        self.info2Label = Label(self.frame1, text="", font=self.fontePadrao)
+
+        self.mensagem = Label(self.frame1, text="", font=self.fontePadrao)
+        self.mensagem.pack()
+
+        self.info1Label.pack()
+        self.info2Label.pack()
+
+        row = database.getProntuario(cursor,id_prontuario)
+
+        if (row == None):
+            self.mensagem['text'] = "Prontuário não encontrado"
+            self.mensagem.pack()
+
+        else:
+            self.info1Label['text'] = "ID Prontuário: " + str(row[0])
+            self.info2Label['text'] = "ID Paciente: " + str(row[1])
+
+            btn1 = Button(self.frame1,text="Confirmar", height=1, width=40,command=lambda:[self.frame1.pack_forget(),
+                                                                                           self.frameSimulacaoAlteraConfirmaProntuario(tipo,id_prontuario).pack()]).pack(padx=50, pady=30)
+
+        btn2 = Button(self.frame1,
+                      text="Retornar a procura de prontuário", height=1, width=40, command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacaoAlteraProntuario(tipo).pack()]).pack(padx=50, pady=30)
+
+        return self.frame1
+
+    # Funcao que realiza o update da tupla alterada
+    def frameSimulacaoAlteraConfirmaProntuario(self,tipo,id_prontuario):
+
+        def change():
+            messagebox.showinfo("Alteração", "Alterado com sucesso")
+            self.idPaciente.delete(0, 'end')
+
+        self.frame1 = Frame()
+        self.frame1["pady"] = 20
+        self.fontePadrao = ("Arial", "10")
+
+        #Label Inicial
+        self.prontuario = Label(self.frame1, text="Alteração de Prontuário")
+        self.prontuario["pady"] = 5
+        self.prontuario["font"] = self.fontePadrao
+        self.prontuario.pack()
+
+        #Label de alteração data Amostra
+        self.idPacienteLabel = Label(self.frame1, text="ID Paciente", font=self.fontePadrao)
+        self.idPacienteLabel["pady"] = 20
+        self.idPacienteLabel.pack()
+
+        self.idPaciente = Entry(self.frame1)
+        self.idPaciente["width"] = 30
+        self.idPaciente["font"] = self.fontePadrao
+        self.idPaciente.pack()
+
+        btn1 = Button(self.frame1,
+                      text="Confirmar", height=1, width=40,command=lambda:
+            [self.alteraProntuario(id_prontuario,self.idPaciente.get()),change()]).pack(padx=50, pady=30)
+
+        btn2 = Button(self.frame1,
+                      text="Retornar a Tela Simulaçãoes", height=1, width=40, command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacoesTelaInicial(tipo).pack()]).pack(padx=50, pady=30)
+
+        return self.frame1
+
+#------------------------------------------------------------------------------
+
+    #Amostra
+
+    # Função de chamada ao banco de dados - UPDATE
+    def alteraAmostra(self,id_amostra,data,resultado):
+        database.updateAmostra(cursor,id_amostra,data,resultado)
+
+    # Funcao de chamada ao banco de dados - INSERT
+    def insereAmostra(self,data,resultado,id_laboratorio,id_paciente,id_pesquisador):
+        database.insertAmostra(cursor,data, resultado, id_laboratorio, id_paciente, id_pesquisador)
+
+    # Funcao de chamada ao banco de dados - DROP AND INSERT
+    def limpaAmostra(self):
+        database.resetAmostra(cursor)
+        messagebox.showinfo("Reset Amostra", "Tabela Amostra voltou ao seu estado original")
+
+    # Funcao que mostra a tabela simulada
+    def frameshowSimulacaoAmostra(self):
+
+        self.root = Tk()
+        self.root.title("Visualização Simulação Amostra")
+
+        self.lst = [("ID Amostra", "Data","Resultado","ID Laboratório","ID Paciente","ID Pesquisador")]
+        self.list = database.showAmostra(cursor)
+        for row in self.list:
+            self.lst.append(row)
+
+        total_rows = len(self.lst)
+        total_columns = len(self.lst[0])
+
+        for i in range(total_rows):
+            for j in range(total_columns):
+                self.e = Entry(self.root, width=20, fg='black',font=('Arial', 12),justify=CENTER)
+
+                self.e.grid(row=i, column=j)
+                self.e.insert(END, self.lst[i][j])
+
+        self.root.mainloop()
+
+    # Funcao Forms para insercao de amostra
+    def frameSimulacaoCriaAmostra(self,tipo):
+
+        def change():
+            messagebox.showinfo("Inserção", "Inserido com sucesso")
+            self.data.delete(0, 'end')
+            self.resultado.delete(0, 'end')
+            self.idLaboratorio.delete(0, 'end')
+            self.idPesquisador.delete(0, 'end')
+            self.idPaciente.delete(0, 'end')
+
+        self.frame1 = Frame()
+        self.frame1["pady"] = 20
+        self.fontePadrao = ("Arial", "10")
+
+        self.amostra = Label(self.frame1, text="Criação de Amostra")
+        self.amostra["pady"] = 5
+        self.amostra["font"] = self.fontePadrao
+        self.amostra.pack()
+
+        self.dataLabel = Label(self.frame1, text="Data", font=self.fontePadrao)
+        self.dataLabel["pady"] = 5
+        self.dataLabel.pack(side=TOP)
+
+        self.data = Entry(self.frame1)
+        self.data["width"] = 30
+        self.data["font"] = self.fontePadrao
+        self.data.pack(side=TOP)
+
+        self.resultadoLabel = Label(self.frame1, text="Resultado", font=self.fontePadrao)
+        self.resultadoLabel["pady"] = 5
+        self.resultadoLabel.pack(side=TOP)
+
+        self.resultado = Entry(self.frame1)
+        self.resultado["width"] = 30
+        self.resultado["font"] = self.fontePadrao
+        self.resultado.pack(side=TOP)
+
+        self.idLaboratorioLabel = Label(self.frame1, text="ID Laboratório", font=self.fontePadrao)
+        self.idLaboratorioLabel["pady"] = 5
+        self.idLaboratorioLabel.pack(side=TOP)
+
+        self.idLaboratorio = Entry(self.frame1)
+        self.idLaboratorio["width"] = 30
+        self.idLaboratorio["font"] = self.fontePadrao
+        self.idLaboratorio.pack(side=TOP)
+
+        self.idPacienteLabel = Label(self.frame1, text="ID Paciente", font=("Arial", "10"))
+        self.idPacienteLabel["pady"] = 5
+        self.idPacienteLabel.pack(side=TOP)
+
+        self.idPaciente = Entry(self.frame1)
+        self.idPaciente["width"] = 30
+        self.idPaciente["font"] = font=self.fontePadrao
+        self.idPaciente.pack(side=TOP)
+
+        self.idPesquisadorLabel = Label(self.frame1, text="ID Pesquisador", font=("Arial", "10"))
+        self.idPesquisadorLabel["pady"] = 5
+        self.idPesquisadorLabel.pack(side=TOP)
+
+        self.idPesquisador = Entry(self.frame1)
+        self.idPesquisador["width"] = 30
+        self.idPesquisador["font"] = font=self.fontePadrao
+        self.idPesquisador.pack(side=TOP)
+
+        self.mensagem = Label(self.frame1, text="", font=self.fontePadrao)
+        self.mensagem.pack()
+
+        btn1 = Button(self.frame1,
+                      text="Confirmar", height=1, width=40,command=lambda:
+            [self.insereAmostra(self.data.get(),self.resultado.get(),self.idLaboratorio.get(),self.idPaciente.get(),self.idPesquisador.get()),change()]).pack(padx=50, pady=30)
+
+        btn2 = Button(self.frame1,
+                      text="Retornar a Tela Inicial", height=1, width=40, command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacoesTelaInicial(tipo).pack()]).pack(padx=50, pady=30)
+
+        return self.frame1
+
+    # Funcao que recebe id de amostra a ser alterado
+    def frameSimulacaoAlteraAmostra(self,tipo):
+
+        self.frame1 = Frame()
+        self.frame1["pady"] = 20
+        self.fontePadrao = ("Arial", "10")
+
+        #Label Inicial
+        self.amostra = Label(self.frame1, text="Alteração de Amostra")
+        self.amostra["pady"] = 5
+        self.amostra["font"] = self.fontePadrao
+        self.amostra.pack()
+
+        #Label de ID AMOSTRA
+        self.idLabel = Label(self.frame1, text="Selecione o ID de Amostra", font=self.fontePadrao)
+        self.idLabel["pady"] = 20
+        self.idLabel.pack()
+
+        self.id = Entry(self.frame1)
+        self.id["width"] = 30
+        self.id["font"] = self.fontePadrao
+        self.id.pack()
+
+        self.btn1 = Button(self.frame1,
+                      text="Confirmar", height=1, width=40,command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacaoAlteraMostraAmostra(tipo,self.id.get()).pack()]).pack(padx=50, pady=30)
+
+        btn2 = Button(self.frame1,
+                      text="Retornar a Tela Simulaçãoes", height=1, width=40, command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacoesTelaInicial(tipo).pack()]).pack(padx=50, pady=30)
+
+        return self.frame1
+
+    # Funcao que confirma tupla a ser alterada
+    def frameSimulacaoAlteraMostraAmostra(self,tipo,id_amostra):
+
+        self.frame1 = Frame()
+        self.frame1["pady"] = 20
+        self.fontePadrao = ("Arial", "10")
+
+        # Label de Dados
+        self.info1Label = Label(self.frame1, text="", font=self.fontePadrao)
+        self.info2Label = Label(self.frame1, text="", font=self.fontePadrao)
+        self.info3Label = Label(self.frame1, text="", font=self.fontePadrao)
+        self.info4Label = Label(self.frame1, text="", font=self.fontePadrao)
+        self.info5Label = Label(self.frame1, text="", font=self.fontePadrao)
+        self.info6Label = Label(self.frame1, text="", font=self.fontePadrao)
+
+        self.mensagem = Label(self.frame1, text="", font=self.fontePadrao)
+        self.mensagem.pack()
+
+        self.info1Label.pack()
+        self.info2Label.pack()
+        self.info3Label.pack()
+        self.info4Label.pack()
+        self.info5Label.pack()
+        self.info6Label.pack()
+
+        row = database.getAmostra(cursor, id_amostra)
+
+        if (row == None):
+            self.mensagem['text'] = "Amostra não encontrada"
+            self.mensagem.pack()
+
+        else:
+            self.info1Label['text'] = "ID Amostra: " + str(row[0])
+            self.info2Label['text'] = "Data: " + str(row[1])
+            self.info3Label['text'] = "Resultado: " + row[2]
+            self.info4Label['text'] = "ID Laboratório: " + str(row[3])
+            self.info5Label['text'] = "ID Paciente: " + str(row[4])
+            self.info6Label['text'] = "ID Pesquisador: " + str(row[5])
+
+            btn1 = Button(self.frame1,text="Confirmar", height=1, width=40,command=lambda:[self.frame1.pack_forget(),self.frameSimulacaoAlteraConfirmaAmostra(tipo,id_amostra).pack()]).pack(padx=50, pady=30)
+
+        btn2 = Button(self.frame1,
+                      text="Retornar a procura de Amostra", height=1, width=40, command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacaoAlteraAmostra(tipo).pack()]).pack(padx=50, pady=30)
+
+        return self.frame1
+
+    # Funcao que realiza o update da tupla alterada
+    def frameSimulacaoAlteraConfirmaAmostra(self,tipo,id_amostra):
+
+        def change():
+            messagebox.showinfo("Alteração", "Alterado com sucesso")
+            self.data.delete(0, 'end')
+            self.resultado.delete(0, 'end')
+
+        self.frame1 = Frame()
+        self.frame1["pady"] = 20
+        self.fontePadrao = ("Arial", "10")
+
+        #Label Inicial
+        self.amostra = Label(self.frame1, text="Alteração de Amostra")
+        self.amostra["pady"] = 5
+        self.amostra["font"] = self.fontePadrao
+        self.amostra.pack()
+
+        #Label de alteração data Amostra
+        self.dataLabel = Label(self.frame1, text="Data", font=self.fontePadrao)
+        self.dataLabel["pady"] = 20
+        self.dataLabel.pack()
+
+        self.data = Entry(self.frame1)
+        self.data["width"] = 30
+        self.data["font"] = self.fontePadrao
+        self.data.pack()
+
+        # Label de alteração data Amostra
+        self.resultadoLabel = Label(self.frame1, text="Resultado", font=self.fontePadrao)
+        self.resultadoLabel["pady"] = 20
+        self.resultadoLabel.pack()
+
+        self.resultado = Entry(self.frame1)
+        self.resultado["width"] = 30
+        self.resultado["font"] = self.fontePadrao
+        self.resultado.pack()
+
+        btn1 = Button(self.frame1,
+                      text="Confirmar", height=1, width=40,command=lambda:
+            [self.alteraAmostra(id_amostra,self.data.get(),self.resultado.get()),change()]).pack(padx=50, pady=30)
+
+        btn2 = Button(self.frame1,
+                      text="Retornar a Tela Simulaçãoes", height=1, width=40, command=lambda:
+            [self.frame1.pack_forget(), self.frameSimulacoesTelaInicial(tipo).pack()]).pack(padx=50, pady=30)
+
+        return self.frame1
+
+
+#################################################################################
     def __init__(self, root, user, tipo):
 
         self.root = root
-        self.root.geometry("600x600")
+        self.root.geometry("600x680")
         self.root.title('Dashboard')
 
         self.primeiroContainer = Frame(root)
