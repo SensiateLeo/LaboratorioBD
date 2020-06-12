@@ -12,7 +12,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 try:
 
     connection = psycopg2.connect(user = "postgres",
-                                  password = "bilicu",
+                                  password = "teste123",
                                   host = "localhost",
                                   port = "5432",
                                   database = "COVID")
@@ -142,12 +142,12 @@ class Dashboard:
         self.frame1["pady"] = 10
 
         btn1 = Button(self.frame1,
-                      text="Relatorio", height=3, width=40,command=lambda:
+                      text="Relatórios", height=3, width=40,command=lambda:
             [self.frame1.pack_forget(),self.frameRelatoriosTelaInicial(tipo).pack()]).pack(padx=20, pady=5)
         btn2 = Button(self.frame1, text="Simulações", height=3, width=40,command=lambda:
             [self.frame1.pack_forget(),self.frameSimulacoesTelaInicial(tipo).pack()]).pack(padx=20, pady=5)
         btn3 = Button(self.frame1,
-                      text="Overview", height=3, width=40,command=lambda:
+                      text="Dashboard", height=3, width=40,command=lambda:
             [self.frame1.pack_forget(),self.frameOverviewTelaInicial(tipo).pack()]).pack(padx=20, pady=5)
 
         return self.frame1
