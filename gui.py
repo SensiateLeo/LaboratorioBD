@@ -337,7 +337,7 @@ class Dashboard:
         self.segundoContainer = Frame(self.root)
         self.segundoContainer.pack()
 
-        self.lst = [("Cidade", "Atendimentos Realizados", "Pacientes Atendidos")]
+        self.lst = [("Cidade", "Atendimentos Realizados", "Atendimentos Janeiro", "Atendimentos Fevereiro", "Atendimentos Março", "Atendimentos Abril", "Pacientes Atendidos")]
         self.list = database.relatorio_historicoAtendimentos(cursor, nome)
         for row in self.list:
             self.lst.append(row)
@@ -348,9 +348,11 @@ class Dashboard:
         for i in range(total_rows):
             for j in range(total_columns):
                 self.e = Entry(self.segundoContainer, width=20, fg='black', font=('Arial', 8), justify=CENTER)
-
                 self.e.grid(row=i, column=j)
-                self.e.insert(END, self.lst[i][j])
+                if(self.lst[i][j] != "null"):
+                    self.e.insert(END, self.lst[i][j])
+                else:
+                    self.e.insert(END, "0")
 
         self.root.mainloop()
 

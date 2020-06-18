@@ -30,10 +30,10 @@ def relatorio_historicoHospitais(cursor, nome):
 
 def relatorio_historicoAtendimentos(cursor, nome):
     if (nome == ''):
-        cursor.execute("select * from Relatorio_3 limit 20")
+        cursor.execute("select * from Relatorio_Atendimentos_Completo limit 20")
         row = cursor.fetchall()
     else:
-        cursor.execute("select * from Relatorio_3 where cidade = '" + nome + "'")
+        cursor.execute("select * from Relatorio_Atendimentos_Completo where cidade = '" + nome + "'")
         row = cursor.fetchall()
     return row
 
