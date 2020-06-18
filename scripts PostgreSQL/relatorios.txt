@@ -1,0 +1,165 @@
+* Relatorio 1 - Histórico Pessoal dos Pacientes
+
+CREATE OR REPLACE VIEW Relatorio_1 as
+    select
+	P.nome,
+	P.idade,
+	P.sexo,
+	P.data_nasc,
+	concat(P.telefone_fixo,P.telefone_celular) as contato_telefonico,
+	concat(P.cidade,concat(P.estado,P.pais)) as endereco,
+	H.nome as Hospital
+    from (select distinct(id_paciente) from amostra where resultado  = 'P') as A
+	JOIN pessoa P
+	ON A.id_paciente = P.id_pessoa
+	JOIN hospital H
+	ON P.id_hospital = H.id_hospital
+
+------------------------------------------------------------------
+
+* Relatorio 2 - Histórico dos Hospitais
+
+CREATE OR REPLACE VIEW Relatorio_2 as
+select
+	H.nome,
+	concat(H.cidade,concat(H.estado,H.pais)),
+	H.qtd_funcionario,
+	H.qtd_leitos,
+	Z.qtd_atendimentos,
+	Z.qtd_pacientes
+    from hospital H
+    JOIN (select X.id_hospital,sum(X.qtd_atendimento) as qtd_atendimentos,count(X.id_paciente) as qtd_pacientes from 
+    (select P.id_hospital,A.qtd_atendimento,A.id_paciente
+    from (select count(id_atendimento) as qtd_atendimento,id_paciente from atendimento group by id_paciente) as A
+    JOIN paciente as P
+    ON P.id_paciente=A.id_paciente) as X group by X.id_hospital) as Z
+    ON Z.id_hospital = H.id_hospital
+
+-------------------------------------------------------------------
+
+* Relatorio 3 - Histórico de Atendimentos do Município
+
+CREATE OR REPLACE VIEW Relatorio_3 as
+select
+H.cidade,
+count(A.id_atendimento) as Qtd_Atendimentos,
+count(distinct(A.paciente))Qtd_Pacientes_Distintos
+from informacoes_gerais_COVID as A
+JOIN hospital as H 
+ON A.id_hospital = H.id_hospital
+group by H.cidade
+
+CREATE OR REPLACE VIEW Relatorio_3_Jan as
+select
+H.cidade,
+count(A.id_atendimento) as Qtd_Atendimentos,
+count(distinct(A.paciente))Qtd_Pacientes_Distintos
+from informacoes_gerais_COVID as A
+JOIN hospital as H 
+ON A.id_hospital = H.id_hospital
+where extract (month from A.data_atendimento) = 01
+group by H.cidade
+
+CREATE OR REPLACE VIEW Relatorio_3_Fev as
+select
+H.cidade,
+count(A.id_atendimento) as Qtd_Atendimentos,
+count(distinct(A.paciente))Qtd_Pacientes_Distintos
+from informacoes_gerais_COVID as A
+JOIN hospital as H 
+ON A.id_hospital = H.id_hospital
+where extract (month from A.data_atendimento) = 02
+group by H.cidade
+
+CREATE OR REPLACE VIEW Relatorio_3_Mar as
+select
+H.cidade,
+count(A.id_atendimento) as Qtd_Atendimentos,
+count(distinct(A.paciente))Qtd_Pacientes_Distintos
+from informacoes_gerais_COVID as A
+JOIN hospital as H 
+ON A.id_hospital = H.id_hospital
+where extract (month from A.data_atendimento) = 03
+group by H.cidade
+
+CREATE OR REPLACE VIEW Relatorio_3_Abr as
+select
+H.cidade,
+count(A.id_atendimento) as Qtd_Atendimentos,
+count(distinct(A.paciente))Qtd_Pacientes_Distintos
+from informacoes_gerais_COVID as A
+JOIN hospital as H 
+ON A.id_hospital = H.id_hospital
+where extract (month from A.data_atendimento) = 04
+group by H.cidade
+
+
+CREATE OR REPLACE VIEW Relatorio_Atendimentos_Completo as
+select Rel.cidade, 
+		Rel.qtd_atendimentos, 
+		COALESCE(Jan.qtd_atendimentos,0) as Atendimentos_Janeiro,
+		COALESCE(Fev.qtd_atendimentos,0) as Atendimentos_Fevereiro,
+		COALESCE(Mar.qtd_atendimentos,0) as Atendimentos_Marco,
+		COALESCE(Abr.qtd_atendimentos,0) as Atendimentos_Abril,
+		Rel.qtd_pacientes_distintos	
+from Relatorio_3 as Rel 
+	LEFT JOIN Relatorio_3_Jan Jan 
+	on Rel.cidade = Jan.cidade
+	LEFT JOIN Relatorio_3_Fev Fev 
+	on Rel.cidade = Fev.cidade
+	LEFT JOIN Relatorio_3_Mar Mar 
+	on Rel.cidade = Mar.cidade
+	LEFT JOIN Relatorio_3_Abr Abr 
+	on Rel.cidade = Abr.cidade
+
+-------------------------------------------------------------------
+
+* Relatorio 4 - Histórico de Amostras
+
+CREATE OR REPLACE VIEW Relatorio_4 as
+select 
+	P.nome,
+	P.idade,
+	P.sexo,
+	concat(P.cidade,concat(P.estado,P.pais)) as endereco,
+	A.data,
+	A.resultado,
+	A.id_laboratorio
+    from amostra A
+    JOIN pessoa P
+    ON P.id_pessoa = A.id_paciente
+    ORDER BY A.data DESC
+
+-------------------------------------------------------------------
+
+* Relatorio 5 - Histórico de Laboratorios
+
+CREATE OR REPLACE VIEW Relatorio_5 as
+select
+	L.nome,
+	L.qtd_pesquisadores,
+	concat(L.cidade,concat(L.estado,L.pais)) as endereco,
+	A.qtd as qtd_amostras
+	from (select id_laboratorio,count(id_amostra) as qtd from amostra group by id_laboratorio) as A
+	JOIN laboratorio as L
+	ON L.id_laboratorio = A.id_laboratorio
+
+-------------------------------------------------------------------
+
+* Relatorio 6 - Histórico de Pesquisadores
+
+CREATE OR REPLACE VIEW Relatorio_6 as
+select 
+	pessoa.nome,
+	funcionario.registro_institucional,
+	funcionario.data_contratacao,
+	amostra.id_amostra,
+	amostra.data,
+	amostra.resultado
+	from pesquisador
+    JOIN pessoa
+    ON pesquisador.id_pesquisador = pessoa.id_pessoa
+    JOIN funcionario
+    ON funcionario.id_funcionario = pesquisador.id_pesquisador
+    JOIN amostra
+    ON pesquisador.id_pesquisador = amostra.id_pesquisador

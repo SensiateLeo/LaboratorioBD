@@ -1,0 +1,5 @@
+INSERT INTO credencial VALUES
+    ('adminCovid','superAdmin')
+
+INSERT INTO funcionario VALUES
+    (11111, 11111, '2020-06-08', 'Admin', 'adminCovid')

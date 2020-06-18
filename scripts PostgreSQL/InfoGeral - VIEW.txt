@@ -1,0 +1,39 @@
+CREATE OR REPLACE VIEW informacoes_gerais_covid AS
+select
+	P.id_pessoa as paciente,
+	P.nome as nome_pessoa,
+	P.idade,
+	P.sexo,
+	P.data_nasc,
+	P.cidade as Cidade,
+	P.cidade || '-' || P.estado || '-' || P.pais AS endereco_pessoa,
+	P.telefone_fixo || '-' || P.telefone_celular as Contato,
+	Atend.id_atendimento,
+	Atend.data as data_atendimento,
+	Atend.grau_avaliacao,
+	P.id_hospital,
+	H.nome as Hospital,
+	H.cidade || '-' || H.estado || '-' || H.pais AS endereco_hospital,
+	H.pais as pais_hospital,
+	H.qtd_funcionario,
+	H.qtd_leitos,
+	Atend.id_medico as medico_atendimento,
+	Med.crm,
+	Pront.id_prontuario,
+	A.resultado_positivo as amostras_positivas,
+	A.resultado_negativo as amostras_negativas
+	from pessoa P
+JOIN paciente Pac
+ON p.id_pessoa = Pac.id_paciente
+JOIN atendimento Atend
+ON Pac.id_paciente = Atend.id_paciente
+JOIN hospital H
+ON Pac.id_hospital = H.id_hospital
+JOIN medico Med
+ON Atend.id_medico = Med.id_medico
+JOIN prontuario Pront
+ON Pac.id_paciente=Pront.id_paciente
+JOIN (select id_paciente, sum(case when resultado = 'P' then 1 else 0 end) as resultado_positivo,sum(case when resultado = 'N' then 1 else 0 end) as resultado_negativo from amostra
+group by id_paciente) as A
+ON A.id_paciente = Pac.id_paciente
+order by P.id_pessoa

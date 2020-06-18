@@ -1,0 +1,41 @@
+--Function MD5 Generator
+CREATE OR REPLACE FUNCTION password_hash (senha VARCHAR) RETURNS VARCHAR AS $$
+
+DECLARE
+
+	hash VARCHAR;
+
+BEGIN
+	hash = MD5(senha);
+	RAISE INFO 'Original: {%}, MD5: {%}',senha,hash;
+	return hash;
+END; $$
+
+LANGUAGE 'plpgsql';
+
+--Alteração da coluna senha/Tabela Credencial
+ALTER TABLE credencial ALTER COLUMN senha TYPE varchar(100);
+
+--Iteração/Update Tabela Credencial
+DO $$
+DECLARE
+   rec_cred  RECORD;
+   cursor_cred  CURSOR FOR SELECT * FROM credencial;
+BEGIN
+
+	OPEN cursor_cred;
+
+	LOOP
+
+      FETCH cursor_cred INTO rec_cred;
+      EXIT WHEN NOT FOUND;
+
+		UPDATE credencial
+		SET senha = password_hash(rec_cred.senha)
+		WHERE CURRENT OF cursor_cred;
+
+	END LOOP;
+
+	CLOSE cursor_cred;
+
+END $$;

@@ -1,0 +1,139 @@
+*********************OVERVIEW***********************
+
+* Total de Casos Positivos
+
+select count(A.id_paciente) as casos_positivos from
+(select id_paciente from amostra where resultado = 'P'
+group by id_paciente) as A
+
+VIEW
+CREATE OR REPLACE VIEW casosPositivos as 
+select count(A.id_paciente) as casos_positivos from
+(select id_paciente from amostra where resultado = 'P'
+group by id_paciente) as A
+
+------------------------------------------------------
+
+* Total de casos Suspeitos
+
+select count(A.id_paciente) from 
+(select id_paciente from amostra
+group by id_paciente) as A
+
+VIEW
+
+CREATE OR REPLACE VIEW casosSuspeitos as 
+select count(A.id_paciente) from 
+(select id_paciente from amostra
+group by id_paciente) as A
+
+------------------------------------------------------
+
+* 20 Hospitais com mais pacientes no ultimos mes
+
+select H.nome,C.quantidade_atendimentos
+from 
+(select B.id_hospital, count(B.id_hospital) as quantidade_atendimentos from 
+(select A.id_paciente,
+	P.id_hospital from
+(select * from atendimento
+where extract(month from data) = extract(month from (select current_date))-2) as A
+JOIN paciente P
+ON A.id_paciente = P.id_paciente) as B
+group by id_hospital) as C
+JOIN hospital H
+ON C.id_hospital = H.id_hospital
+order by quantidade_atendimentos DESC
+
+CREATE OR REPLACE VIEW hospital_populoso as
+select H.nome,C.quantidade_atendimentos
+from 
+(select B.id_hospital, count(B.id_hospital) as quantidade_atendimentos from 
+(select A.id_paciente,
+	P.id_hospital from
+(select * from atendimento
+where extract(month from data) = extract(month from (select current_date))-2) as A
+JOIN paciente P
+ON A.id_paciente = P.id_paciente) as B
+group by id_hospital) as C
+JOIN hospital H
+ON C.id_hospital = H.id_hospital
+order by quantidade_atendimentos DESC
+limit 20
+
+------------------------------------------------------
+
+* 20 Laboratórios com mais analises no ultimo mes(abril)
+
+select A.id_laboratorio,A.total_analises,L.nome
+from
+(select id_laboratorio, count(id_laboratorio) as total_analises from amostra
+where extract(month from data) = extract(month from (select current_date))-2
+group by id_laboratorio
+order by total_analises DESC) as A
+JOIN laboratorio L
+ON A.id_laboratorio = L.id_laboratorio
+order by A.total_analises DESC
+limit 20
+
+CREATE OR REPLACE VIEW LabMaisAnalisados as
+select L.nome,A.total_analises
+from
+(select id_laboratorio, count(id_laboratorio) as total_analises from amostra
+where extract(month from data) = extract(month from (select current_date))-2
+group by id_laboratorio
+order by total_analises DESC) as A
+JOIN laboratorio L
+ON A.id_laboratorio = L.id_laboratorio
+order by A.total_analises DESC
+limit 20
+
+----------------------------------------------------------------------------
+
+* 20 Cidades com mais casos positivos no último mês(abril)
+
+PRECISA ADICIONAR O CAMPO CIDADE NA VIEW INFORMACOES_GERAIS_COVID
+
+select A.endereco_pessoa as Cidade,
+sum(A.amostras_positivas) as Qtd_Casos_Positivos_COVID from
+(select paciente,amostras_positivas,endereco_pessoa from informacoes_gerais_covid group by paciente,amostras_positivas,endereco_pessoa) as A
+group by endereco_pessoa
+order by Qtd_Casos_Positivos_COVID DESC
+limit 20
+
+CREATE OR REPLACE VIEW cidadeMaisPositivos as
+select A.cidade as Cidade,
+sum(A.amostras_positivas) as Qtd_Casos_Positivos_COVID from
+(select paciente,amostras_positivas,endereco_pessoa,cidade from informacoes_gerais_covid 
+ 	where extract(month from data_atendimento) = extract(month from (select current_date))-2 
+ 	group by paciente,amostras_positivas,cidade,endereco_pessoa) as A
+group by cidade
+order by Qtd_Casos_Positivos_COVID DESC
+limit 20
+
+----------------------------------------------------------------------------
+
+* 20 Cidades com mais casos suspeitos no ultimo mês; 
+(Usa a pesquisa 1 do Trab 7
+"visualizar o andamento das amostragens realizadas comcada paciente com suspeita de COVID-19"
+então amostra = suspeita)
+
+SELECT count(A.id_amostra) as quantidade_suspeitos, PE.cidade as Cidade
+	FROM PESQUISADOR Pes
+	JOIN AMOSTRA A ON A.id_pesquisador = Pes.id_pesquisador
+	JOIN PACIENTE PA ON PA.id_paciente = A.id_paciente
+	JOIN PESSOA PE ON PE.id_pessoa = PA.id_paciente
+WHERE extract(month from A.data) = extract(month from (select current_date))-2 and
+	 (Cidade) != ''
+GROUP BY PE.cidade ORDER BY quantidade_suspeitos DESC
+
+CREATE OR REPLACE VIEW CidadeMaisSuspeitos as
+SELECT  PE.cidade as Cidade, count(A.id_amostra) as quantidade_suspeitos
+	FROM PESQUISADOR Pes
+	JOIN AMOSTRA A ON A.id_pesquisador = Pes.id_pesquisador
+	JOIN PACIENTE PA ON PA.id_paciente = A.id_paciente
+	JOIN PESSOA PE ON PE.id_pessoa = PA.id_paciente
+WHERE extract(month from A.data) = extract(month from (select current_date))-2 and
+	 (Cidade) != ''
+GROUP BY PE.cidade ORDER BY quantidade_suspeitos DESC
+LIMIT 20
